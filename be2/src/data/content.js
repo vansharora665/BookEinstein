@@ -19,71 +19,71 @@ export const basicModules = [
 
 // full modules after sign in
 export const fullModules = [
-  {
-    id: 1,
-    title: "AI Foundations",
-    level: "Start here",
-    color: "module-blue",
-    topics: [
-      "What is AI & where is it used?",
-      "Narrow vs General AI",
-      "How computers see numbers",
-      "Intro to datasets",
-      "AI in your daily apps",
-    ],
-  },
-  {
-    id: 2,
-    title: "Thinking Like a Machine",
-    level: "Logic & Patterns",
-    color: "module-yellow",
-    topics: [
-      "If-else decisions",
-      "Creating simple rules",
-      "Patterns & sequences",
-      "Flowcharts & pseudocode",
-      "From rules to models",
-    ],
-  },
-  {
-    id: 3,
-    title: "Machine Learning Intuition",
-    level: "Visual learning",
-    color: "module-purple",
-    topics: [
-      "What is a model?",
-      "Training vs testing",
-      "Overfitting in plain English",
-      "Classification vs regression",
-      "Hands-on: guess the marks",
-    ],
-  },
-  {
-    id: 4,
-    title: "Data, Ethics & Safety",
-    level: "Very important!",
-    color: "module-pink",
-    topics: [
-      "Good vs bad data",
-      "Bias in AI",
-      "Privacy & consent",
-      "Responsible AI usage",
-      "AI & future careers",
-    ],
-  },
-  {
-    id: 5,
-    title: "Build Your First AI Mini-Project",
-    level: "Guided project",
-    color: "module-teal",
-    topics: [
-      "Choosing a project idea",
-      "Collecting simple data",
-      "Training with no-code tools",
-      "Testing with friends",
-      "Presenting your AI project",
-    ],
-  },
+//   {
+//     id: 1,
+//     title: "AI Foundations",
+//     level: "Start here",
+//     color: "module-blue",
+//     topics: [
+//       "What is AI & where is it used?",
+//       "Narrow vs General AI",
+//       "How computers see numbers",
+//       "Intro to datasets",
+//       "AI in your daily apps",
+//     ],
+//   },
+//   {
+//     id: 2,
+//     title: "Thinking Like a Machine",
+//     level: "Logic & Patterns",
+//     color: "module-yellow",
+//     topics: [
+//       "If-else decisions",
+//       "Creating simple rules",
+//       "Patterns & sequences",
+//       "Flowcharts & pseudocode",
+//       "From rules to models",
+//     ],
+//   },
+//   {
+//     id: 3,
+//     title: "Machine Learning Intuition",
+//     level: "Visual learning",
+//     color: "module-purple",
+//     topics: [
+//       "What is a model?",
+//       "Training vs testing",
+//       "Overfitting in plain English",
+//       "Classification vs regression",
+//       "Hands-on: guess the marks",
+//     ],
+//   },
+//   {
+//     id: 4,
+//     title: "Data, Ethics & Safety",
+//     level: "Very important!",
+//     color: "module-pink",
+//     topics: [
+//       "Good vs bad data",
+//       "Bias in AI",
+//       "Privacy & consent",
+//       "Responsible AI usage",
+//       "AI & future careers",
+//     ],
+//   },
+//   {
+//     id: 5,
+//     title: "Build Your First AI Mini-Project",
+//     level: "Guided project",
+//     color: "module-teal",
+//     topics: [
+//       "Choosing a project idea",
+//       "Collecting simple data",
+//       "Training with no-code tools",
+//       "Testing with friends",
+//       "Presenting your AI project",
+//     ],
+//   },
 ];
 
 // hero mosaic tiles

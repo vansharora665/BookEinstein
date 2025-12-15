@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import ReactDOM from "react-dom";
+import ProfessionalQuiz from "../pages/ProfessionalQuiz"; // <- adjust path if needed
+import Explain from "../pages/Explain";
 
+// small avatar options kept here; these are UI choices, not module content
 const avatarOptions = [
   { id: "robot", emoji: "🤖", label: "Robot" },
   { id: "owl", emoji: "🦉", label: "Owl" },
@@ -20,14 +24,17 @@ const avatarOptions = [
 ];
 
 function Dashboard({
-  fullModules,
+  fullModules = [],
   selectedModule,
   setSelectedModule,
-  progress,
-  leaderboard,
+  progress = {},
+  leaderboard = [],
   leaderboardFilter,
   setLeaderboardFilter,
   onCompleteTopic,
+  refreshSheet,
+  sheetLoading,
+  sheetError,
 }) {
   const [selectedAvatar, setSelectedAvatar] = useState(avatarOptions[0].id);
   const [customAvatarUrl, setCustomAvatarUrl] = useState(null);
@@ -39,6 +46,8 @@ function Dashboard({
   const [learningModule, setLearningModule] = useState(null);
   const [activityModule, setActivityModule] = useState(null);
   const [activityTopicIndex, setActivityTopicIndex] = useState(0);
+  const [explainModule, setExplainModule] = useState(null);
+  const [explainTopic, setExplainTopic] = useState(0);
 
   const maxPoints =
     leaderboard.length > 0
@@ -46,12 +55,15 @@ function Dashboard({
       : 1;
 
   const completionForModule = (moduleId) => {
-    const arr = progress[moduleId] || [];
+    const arr = (progress && progress[moduleId]) || [];
     const done = arr.filter(Boolean).length;
     return { done, total: arr.length };
   };
 
-  const totalTopics = fullModules.reduce((sum, m) => sum + m.topics.length, 0);
+  const totalTopics = fullModules.reduce(
+    (sum, m) => sum + ((m.topics && m.topics.length) || 0),
+    0
+  );
   const totalDone = fullModules.reduce((sum, m) => {
     const { done } = completionForModule(m.id);
     return sum + done;
@@ -167,6 +179,24 @@ function Dashboard({
             </span>
           </button>
 
+          {/* debug / convenience control to refresh sheet content */}
+          <div style={{ margin: "8px 0 16px" }}>
+            <button
+              type="button"
+              onClick={refreshSheet}
+              className="module-primary-btn"
+              style={{ padding: "6px 14px" }}
+            >
+              {sheetLoading ? "Refreshing..." : "Refresh Content (Sheet)"}
+            </button>
+
+            {sheetError && (
+              <p style={{ color: "red", fontSize: 13, marginTop: 8 }}>
+                Failed to fetch sheet. Check console for details.
+              </p>
+            )}
+          </div>
+
           {/* PAGE SWITCHING */}
           {activePage === "dashboard" && (
             <DashboardHome
@@ -225,6 +255,10 @@ function Dashboard({
               onOpenActivity={(topicIndex) =>
                 openActivity(learningModule, topicIndex)
               }
+              setExplainModule={setExplainModule}
+              setExplainTopic={setExplainTopic}
+              setActivePage={setActivePage}
+
             />
           )}
 
@@ -235,6 +269,15 @@ function Dashboard({
               onBack={() => setActivePage("learning")}
             />
           )}
+
+          {activePage === "explain" && explainModule && (
+            <Explain
+                module={explainModule}
+                topicIndex={explainTopic}
+                onBack={() => setActivePage("learning")}
+            />
+          )}
+
         </div>
       </div>
     </main>
@@ -264,7 +307,7 @@ function DashboardHome({
   setSelectedAvatar,
   handleAvatarUpload,
   modulesCompleted,
-  fullModules,
+  fullModules = [],
   totalDone,
   totalTopics,
   overallPercent,
@@ -277,6 +320,8 @@ function DashboardHome({
   setLeaderboardFilter,
   maxPoints,
 }) {
+  const totalTopicsCount = totalTopics || fullModules.reduce((s, m) => s + ((m.topics && m.topics.length) || 0), 0);
+
   return (
     <>
       {/* Hero welcome card */}
@@ -301,7 +346,7 @@ function DashboardHome({
             <div>
               <p className="hero-card-label">Topics completed</p>
               <p className="hero-card-value">
-                {totalDone}/{totalTopics}
+                {totalDone}/{totalTopicsCount}
               </p>
             </div>
             <div className="hero-card-overall">
@@ -436,68 +481,96 @@ function DashboardHome({
 /* ---------- My modules page + panel ---------- */
 
 function MyModulesPanel({
-  fullModules,
+  fullModules = [],
   completionForModule,
   selectedModule,
   setSelectedModule,
   onStartModule,
 }) {
+  const totalTopics = fullModules.reduce((s, m) => s + ((m.topics && m.topics.length) || 0), 0);
+
   return (
     <div className="modules-column dashboard-modules-panel">
       <div className="section-header inline">
         <h2>Your AI modules</h2>
-        <span className="pill">5 modules • 25 topics</span>
+        <span className="pill">{fullModules.length} modules • {totalTopics} topics</span>
       </div>
       <div className="full-modules-grid">
         {fullModules.map((mod) => {
           const { done, total } = completionForModule(mod.id);
           const percent = total ? Math.round((done / total) * 100) : 0;
+
+          // defensive aliases for desc / image (mapper produces `desc` & `image` but accept other names)
+          const moduleDesc = mod?.desc || mod?.description || mod?.moduleDescription || "";
+          const moduleImage = mod?.image || mod?.moduleImage || "";
+
           return (
             <div
               key={mod.id}
-              className={`full-module-card ${mod.color} ${
-                selectedModule.id === mod.id ? "active" : ""
+              className={`full-module-card ${mod.color || ""} ${
+                selectedModule?.id === mod.id ? "active" : ""
               }`}
               role="button"
               tabIndex={0}
               onClick={() => setSelectedModule(mod)}
             >
-              <h3>{mod.title}</h3>
-              <p>{mod.level}</p>
-              <span className="module-progress">
-                {done}/{total} topics • {percent}%
-              </span>
-              <div className="module-progress-bar">
-                <div
-                  className="module-progress-fill"
-                  style={{ width: `${percent}%` }}
-                />
-              </div>
-              <p className="module-desc">
-                Guided lessons, visual explanations, and bite-sized quizzes to
-                build your AI intuition.
-              </p>
-              <div className="module-card-actions">
-                <button
-                  type="button"
-                  className="module-secondary-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedModule(mod);
-                  }}
-                >
-                  View topics
-                </button>
-                <button
-                  type="button"
-                  className="module-primary-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onStartModule(mod);
-                  }}
-                >
-                  Start
-                </button>
+              {/* image banner if provided */}
+              {moduleImage ? (
+                <div className="module-image-banner" style={{ height: 110, overflow: "hidden", borderTopLeftRadius: 12, borderTopRightRadius: 12 }}>
+                  <img
+                    src={moduleImage}
+                    alt={mod.title || "Module image"}
+                    style={{ width: "100%", height: "110px", objectFit: "cover", display: "block" }}
+                  />
+                </div>
+              ) : null}
+
+              <div className="module-card-body" style={{ padding: moduleImage ? "12px 12px 16px" : "16px 12px" }}>
+                <h3 style={{ margin: 0 }}>{mod.title}</h3>
+                <p style={{ margin: "6px 0", fontSize: 13, color: "var(--text-muted)" }}>
+                  {mod.level || ""}
+                </p>
+
+                <span className="module-progress" style={{ fontSize: 12 }}>
+                  {done}/{total} topics • {percent}%
+                </span>
+                <div className="module-progress-bar" style={{ marginTop: 8 }}>
+                  <div className="module-progress-fill" style={{ width: `${percent}%` }} />
+                </div>
+
+                {/* description */}
+                {moduleDesc ? (
+                  <p style={{ marginTop: 10, fontSize: 13, color: "var(--text-muted)" }}>{moduleDesc}</p>
+                ) : null}
+
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginTop: 12 }}>
+                  <div>
+                    {/* small hint or extra space kept intentionally */}
+                  </div>
+
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <button
+                      type="button"
+                      className="module-secondary-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedModule(mod);
+                      }}
+                    >
+                      View topics
+                    </button>
+                    <button
+                      type="button"
+                      className="module-primary-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onStartModule(mod);
+                      }}
+                    >
+                      Start
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           );
@@ -744,35 +817,194 @@ function SummaryCard({ title, value, sub, highlight }) {
   );
 }
 
-/* ---------- Learning view (module page) ---------- */
+/* ---------- ModuleLearningView & ActivityWorkspace ---------- */
+/* These two components rely only on `module` objects passed in (mapped from sheet).
+   I kept them here to avoid touching other files — they read content defensively
+   from module.topicContents, module.topicSlides, module.videos, module.summaryVideos, etc.
+   They do not contain hard-coded sample module lists — module content must come via props.
+   (I preserved their implementations from your file with defensive fallbacks.)
+*/
 
+/* ModuleLearningView - simplified to rely on module props (keeps quiz modal) */
 function ModuleLearningView({
   module,
   progress,
   onCompleteTopic,
   onBack,
   onOpenActivity,
+  setExplainModule,
+  setExplainTopic,
+  setActivePage,
 }) {
   const [activeTopicIndex, setActiveTopicIndex] = useState(0);
-  const topics = module.topics;
-  const moduleProgress = progress[module.id] || [];
+  const [quizOpen, setQuizOpen] = useState(false);
+  const [showTeacherNotes, setShowTeacherNotes] = useState(false);
+
+  const topics = module?.topics || [];
+  const moduleProgress = (progress && module && progress[module.id]) ? progress[module.id] : [];
   const isTopicDone = (i) => !!moduleProgress[i];
+
+  const topicDescriptions =
+    module?.topicContents ||
+    module?.topicDescriptions ||
+    module?.topicDescription ||
+    module?.topic_content ||
+    [];
+
+  const activityContents =
+    module?.activityContents ||
+    module?.activityContent ||
+    module?.activity_content ||
+    [];
+
+  const teacherNotesArr =
+    module?.teacherNotes ||
+    module?.teacher_notes ||
+    module?.teacherNote ||
+    [];
+
+  const topicImages =
+    module?.topicImages ||
+    module?.topicImage ||
+    module?.topic_images ||
+    [];
+
+  const videos =
+    module?.videos ||
+    module?.videoUrl ||
+    module?.video_urls ||
+    module?.video ||
+    [];
+
+  const makeDerivedQuestions = (topicText, idx) => [
+    {
+      id: `${module?.id || "m"}-${idx}-q1`,
+      type: "mcq",
+      q: `Which statement about "${topicText}" is most correct?`,
+      options: [
+        "It never needs data",
+        "It uses data to learn",
+        "It runs without examples",
+        "It is fully random",
+      ],
+      answer: 1,
+      hint: "Think: learning requires examples.",
+    },
+    {
+      id: `${module?.id || "m"}-${idx}-q2`,
+      type: "truefalse",
+      q: `${topicText} often requires cleaning input data.`,
+      answer: true,
+      hint: "Raw data is usually noisy.",
+    },
+  ];
+
+  const topic = topics[activeTopicIndex] || `Topic ${activeTopicIndex + 1}`;
+
+  const topicDescription =
+    (Array.isArray(topicDescriptions) && topicDescriptions[activeTopicIndex]) ||
+    module?.topicDescription || 
+    "Short classroom-style explanation of this concept with simple examples.";
+
+  const activityContent =
+    (Array.isArray(activityContents) && activityContents[activeTopicIndex]) ||
+    "";
+
+  const teacherNote =
+    (Array.isArray(teacherNotesArr) && teacherNotesArr[activeTopicIndex]) ||
+    "";
+
+  const topicImage =
+    (Array.isArray(topicImages) && topicImages[activeTopicIndex]) ||
+    module?.topicImage ||
+    "";
+
+  const videoUrl =
+    (Array.isArray(videos) && videos[activeTopicIndex]) ||
+    module?.videos?.[activeTopicIndex] ||
+    "";
+
+  const questionsForTopic =
+    module?.quiz &&
+    Array.isArray(module.quiz[activeTopicIndex]) &&
+    module.quiz[activeTopicIndex].length
+      ? module.quiz[activeTopicIndex]
+      : makeDerivedQuestions(topic, activeTopicIndex);
+
+  function handleQuizComplete(result) {
+    if (result && typeof result.score === "number" && result.total) {
+      const accuracy = result.score / Math.max(result.total, 1);
+      if (accuracy >= 0.6) {
+        try {
+          onCompleteTopic && onCompleteTopic(module.id, activeTopicIndex);
+        } catch (e) {
+          console.warn("onCompleteTopic error:", e);
+        }
+      }
+    }
+    setQuizOpen(false);
+  }
+
+  function Modal({ children, onClose }) {
+    const elId = "dashboard-mlv-modal-root";
+    let root = document.getElementById(elId);
+    if (!root) {
+      root = document.createElement("div");
+      root.id = elId;
+      document.body.appendChild(root);
+    }
+
+    return ReactDOM.createPortal(
+      <div
+        role="dialog"
+        aria-modal="true"
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 99999,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "rgba(0,0,0,0.45)",
+          padding: 12,
+        }}
+        onMouseDown={(e) => {
+          if (e.target === e.currentTarget) onClose && onClose();
+        }}
+      >
+        <div
+          style={{
+            width: "min(1000px, 98%)",
+            maxHeight: "92vh",
+            overflow: "auto",
+            borderRadius: 12,
+            background: "var(--bg-elevated)",
+            boxShadow: "var(--shadow-soft)",
+            padding: 12,
+            border: "1px solid var(--border-subtle)",
+          }}
+        >
+          {children}
+        </div>
+      </div>,
+      root
+    );
+  }
 
   return (
     <section className="module-learning">
-      {/* LEFT: topic list */}
       <aside className="module-learning-sidebar">
         <div className="module-learning-header">
-          <h2>{module.title}</h2>
+          <h2>{module?.title}</h2>
           <p className="module-learning-sub">
             Choose a sub-topic on the left and use the activity workspace to
             explore it with videos, quizzes, or mini-games.
           </p>
         </div>
         <ul className="learning-topic-list">
-          {topics.map((topic, i) => (
+          {topics.map((t, i) => (
             <li
-              key={topic}
+              key={`${t}-${i}`}
               className={`learning-topic-item ${
                 activeTopicIndex === i ? "active" : ""
               } ${isTopicDone(i) ? "done" : ""}`}
@@ -781,15 +1013,13 @@ function ModuleLearningView({
               <div className="learning-topic-main">
                 <span className="learning-topic-badge">{i + 1}</span>
                 <div>
-                  <p className="learning-topic-title">{topic}</p>
+                  <p className="learning-topic-title">{t}</p>
                   <p className="learning-topic-caption">
                     {isTopicDone(i) ? "Completed" : "Tap to learn"}
                   </p>
                 </div>
               </div>
-              {isTopicDone(i) && (
-                <span className="learning-topic-check">✔</span>
-              )}
+              {isTopicDone(i) && <span className="learning-topic-check">✔</span>}
             </li>
           ))}
         </ul>
@@ -802,30 +1032,58 @@ function ModuleLearningView({
         </button>
       </aside>
 
-      {/* CENTER: explanation + activity controls */}
       <div className="module-learning-content">
         <div className="learning-content-header">
-          <h3>{topics[activeTopicIndex]}</h3>
+          <h3>{topic}</h3>
           <span className="learning-content-pill">Topic overview</span>
         </div>
 
         <div className="learning-content-body">
           <div className="learning-content-main-card">
+            {topicImage ? (
+              <div style={{ marginBottom: 12 }}>
+                <img
+                  src={topicImage}
+                  alt={topic}
+                  style={{ width: "100%", maxHeight: 220, objectFit: "cover", borderRadius: 8 }}
+                />
+              </div>
+            ) : null}
+
             <p className="learning-content-text">
-              This section gives a short, classroom-style explanation of the
-              topic. Use examples, diagrams, and analogies from everyday school
-              life so the concept sticks.
+              {topicDescription}
             </p>
-            <ul className="learning-content-list">
+
+            {activityContent ? (
+              <div style={{ marginTop: 10 }}>
+                <h4 style={{ margin: "6px 0" }}>Activity</h4>
+                <div className="learning-activity-content" dangerouslySetInnerHTML={{ __html: activityContent }} />
+              </div>
+            ) : null}
+
+            {teacherNote ? (
+              <div style={{ marginTop: 10 }}>
+                <button
+                  type="button"
+                  className="module-secondary-btn"
+                  onClick={() => setShowTeacherNotes((s) => !s)}
+                  aria-expanded={showTeacherNotes}
+                >
+                  {showTeacherNotes ? "Hide teacher notes" : "Show teacher notes"}
+                </button>
+                {showTeacherNotes && (
+                  <div style={{ marginTop: 8, padding: 10, background: "var(--bg-muted)", borderRadius: 8 }}>
+                    <strong>Teacher notes</strong>
+                    <div style={{ marginTop: 6 }}>{teacherNote}</div>
+                  </div>
+                )}
+              </div>
+            ) : null}
+
+            <ul className="learning-content-list" style={{ marginTop: 12 }}>
               <li>Key idea of the topic in 3–4 sentences.</li>
-              <li>
-                A simple real-world example (for example, AI recommending songs
-                you might like).
-              </li>
-              <li>
-                A mini challenge to think about before entering the activity
-                workspace.
-              </li>
+              <li>A real-world example (for example, AI recommending songs you might like).</li>
+              <li>A mini challenge to think about before entering the activity workspace.</li>
             </ul>
           </div>
 
@@ -833,11 +1091,9 @@ function ModuleLearningView({
             <button
               type="button"
               className="module-secondary-btn"
-              onClick={() =>
-                alert(
-                  "Here you can plug in a small practice question or embed a quiz widget."
-                )
-              }
+              onClick={() => {
+                setQuizOpen(true);
+              }}
             >
               Quick practice
             </button>
@@ -848,6 +1104,19 @@ function ModuleLearningView({
             >
               Start activity workspace
             </button>
+
+            <button
+                type="button"
+                className="module-primary-btn"
+                onClick={() => {
+                    setExplainModule(module);        // store selected module
+                    setExplainTopic(activeTopicIndex); // store topic index
+                    setActivePage("explain");        // switch to Explain page
+                    }}
+                >
+                Explain
+            </button>
+
             <button
               type="button"
               className="module-primary-btn"
@@ -858,51 +1127,191 @@ function ModuleLearningView({
           </div>
         </div>
       </div>
+
+      {quizOpen && (
+        <Modal onClose={() => setQuizOpen(false)}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+            <div>
+              <div style={{ fontSize: 14, color: "var(--text-muted)" }}>{module?.title} • {topic}</div>
+              <h3 style={{ margin: "4px 0 0 0" }}>Quick practice</h3>
+            </div>
+            <div>
+              <button type="button" className="module-secondary-btn" onClick={() => setQuizOpen(false)}>Close</button>
+            </div>
+          </div>
+
+          <ProfessionalQuiz
+            initialType="mixed"
+            questions={questionsForTopic}
+            timePerQuestion={20}
+            onComplete={handleQuizComplete}
+          />
+        </Modal>
+      )}
     </section>
   );
 }
 
-/* ---------- Full-page Activity workspace ---------- */
+/* ---------- Full-page Activity workspace (keeps behavior to use module data only) ---------- */
 
 function ActivityWorkspace({ module, topicIndex, onBack }) {
-  const topicTitle = module.topics[topicIndex];
+  const topicTitle = module?.topics?.[topicIndex] || `Topic ${topicIndex + 1}`;
+  const [mode, setMode] = useState(null);
+  const [quizClosedKey, setQuizClosedKey] = useState(0);
+
+  const derivedQuestions = [
+    {
+      id: `${module?.id || "m"}-a-${topicIndex}-q1`,
+      type: "mcq",
+      q: `Which is true about ${topicTitle}?`,
+      options: ["Never needs data", "Learns from examples", "Always deterministic", "Has no inputs"],
+      answer: 1,
+      hint: "Learning uses examples."
+    },
+    {
+      id: `${module?.id || "m"}-a-${topicIndex}-q2`,
+      type: "truefalse",
+      q: `${topicTitle} usually requires examples for training.`,
+      answer: true
+    }
+  ];
+
+  const questionsForActivity = (module?.quiz && Array.isArray(module.quiz[topicIndex]) && module.quiz[topicIndex].length)
+    ? module.quiz[topicIndex]
+    : derivedQuestions;
+
+  function handleQuizComplete(result) {
+    setMode(null);
+    setQuizClosedKey((k) => k + 1);
+    alert(`Quiz finished — score ${result.score}/${result.total}`);
+  }
+
+  const topicDescription =
+    (module?.topicDescriptions && module.topicDescriptions[topicIndex]) ||
+    (module?.topicContents && module.topicContents[topicIndex]) ||
+    "";
+
+  const activityContent =
+    (module?.activityContents && module.activityContents[topicIndex]) ||
+    (module?.activityContent && module.activityContent[topicIndex]) ||
+    "";
+
+  const teacherNotes = (module?.teacherNotes && module.teacherNotes[topicIndex]) || "";
+
+  const topicImage = (module?.topicImages && module.topicImages[topicIndex]) ||
+                     (module?.topicImage && module.topicImage[topicIndex]) ||
+                     "";
+
+  const videoUrl = (module?.videos && module.videos[topicIndex]) || "";
 
   return (
     <section className="activity-workspace">
       <div className="activity-header">
         <div>
           <p className="activity-breadcrumb">
-            {module.title} • Topic {topicIndex + 1}
+            {module?.title || "Untitled module"} • Topic {topicIndex + 1}
           </p>
           <h1>{topicTitle}</h1>
           <p>
-            This is your dedicated activity space. Embed videos, simulations,
-            code sandboxes, or quiz components here for an immersive experience.
+            {topicDescription ||
+              "This is your dedicated activity space. Embed videos, simulations, code sandboxes, or quiz components here for an immersive experience."}
           </p>
         </div>
-        <button
-          type="button"
-          className="module-secondary-btn"
-          onClick={onBack}
-        >
-          ← Back to topic overview
-        </button>
+        <div style={{ display: "flex", gap: 8 }}>
+          <button
+            type="button"
+            className="module-secondary-btn"
+            onClick={() => setMode("video")}
+          >
+            Start video
+          </button>
+          <button
+            type="button"
+            className="module-primary-btn"
+            onClick={() => setMode("quiz")}
+          >
+            Start quiz
+          </button>
+          <button
+            type="button"
+            className="module-secondary-btn"
+            onClick={onBack}
+          >
+            ← Back to topic overview
+          </button>
+        </div>
       </div>
 
       <div className="activity-main">
         <div className="activity-primary">
           <div className="activity-media-card">
             <p className="activity-label">Activity canvas</p>
-            <p>
-              Imagine a video player, drag-and-drop game, or interactive quiz in
-              this area. For now, this is a placeholder panel styled like your
-              other cards.
-            </p>
-            <ul>
-              <li>Play an explainer video for this topic.</li>
-              <li>Show interactive steps or coding blocks.</li>
-              <li>End with 3–5 auto-graded questions.</li>
-            </ul>
+
+            {topicImage && !mode && (
+              <div style={{ marginBottom: 12 }}>
+                <img
+                  src={topicImage}
+                  alt={topicTitle}
+                  style={{ width: "100%", maxHeight: 260, objectFit: "cover", borderRadius: 8 }}
+                />
+              </div>
+            )}
+
+            {mode === "video" && (
+              <>
+                <div className="activity-video-wrapper" style={{ marginTop: 8 }}>
+                  {videoUrl ? (
+                    <video className="activity-video" controls style={{ width: "100%" }}>
+                      <source src={videoUrl} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  ) : (
+                    <iframe
+                      title="sample"
+                      className="activity-video-frame"
+                      src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  )}
+                </div>
+                <p className="activity-play-text">Watch this short explainer and then try the activity or quiz.</p>
+              </>
+            )}
+
+            {mode === "quiz" && (
+              <div style={{ marginTop: 8 }}>
+                <ProfessionalQuiz
+                  key={quizClosedKey}
+                  initialType="mixed"
+                  questions={questionsForActivity}
+                  timePerQuestion={20}
+                  onComplete={handleQuizComplete}
+                />
+              </div>
+            )}
+
+            {!mode && (
+              <>
+                {activityContent ? (
+                  <div style={{ marginTop: 8 }}>
+                    <div dangerouslySetInnerHTML={{ __html: activityContent }} />
+                  </div>
+                ) : (
+                  <>
+                    <p>
+                      Imagine a video player, drag-and-drop game, or interactive quiz in
+                      this area. For now, use the buttons above to start a video or a short quiz.
+                    </p>
+                    <ul>
+                      <li>Play an explainer video for this topic.</li>
+                      <li>Show interactive steps or coding blocks.</li>
+                      <li>End with 3–5 auto-graded questions.</li>
+                    </ul>
+                  </>
+                )}
+              </>
+            )}
           </div>
         </div>
 
@@ -919,9 +1328,8 @@ function ActivityWorkspace({ module, topicIndex, onBack }) {
           <div className="activity-meta-card">
             <h3>Teacher notes</h3>
             <p>
-              Teachers can add hints, tips, or follow-up tasks for homework.
-              These instructions stay hidden from the main student flow if
-              required.
+              {teacherNotes ||
+                "Teachers can add hints, tips, or follow-up tasks for homework. These instructions stay hidden from the main student flow if required."}
             </p>
           </div>
         </aside>
@@ -931,3 +1339,8 @@ function ActivityWorkspace({ module, topicIndex, onBack }) {
 }
 
 export default Dashboard;
+
+
+
+
+

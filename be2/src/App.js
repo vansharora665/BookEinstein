@@ -1,40 +1,101 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
+import { useAuth0 } from "@auth0/auth0-react";
 
-import { basicModules, fullModules, heroTiles, baseLeaderboard } from "./data/content";
+// removed sample modules import — we will only use sheet-driven modules
+import { heroTiles, baseLeaderboard } from "./data/content";
 import Header from "./components/Header";
 import LandingPage from "./components/LandingPage";
 import Dashboard from "./components/Dashboard";
 import Footer from "./components/Footer";
 
+import { useLoadModulesFromSheet } from "./hooks/useLoadModulesFromSheet";
+import { SHEET_CSV_URL } from "./config";
+
 function App() {
-  const [isSignedIn, setIsSignedIn] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const { isAuthenticated, isLoading } = useAuth0();
+
+  // load modules from Google Sheets (single source of truth)
+  const {
+    modules: sheetModules,
+    loading: sheetLoading,
+    error: sheetError,
+    refresh: refreshSheet,
+  } = useLoadModulesFromSheet(SHEET_CSV_URL);
+
+  // effective modules used across app (sheetModules OR empty array)
+  const effectiveFullModules = Array.isArray(sheetModules) ? sheetModules : [];
 
   // topic completion: progress[moduleId] = [bool, bool, ...]
-  const [progress, setProgress] = useState(() => {
-    const initial = {};
-    fullModules.forEach((m) => {
-      initial[m.id] = Array(m.topics.length).fill(false);
-    });
-    return initial;
-  });
+  // start empty and populate when modules arrive
+  const [progress, setProgress] = useState({});
 
-  const [selectedModule, setSelectedModule] = useState(fullModules[0]);
+  // ensure progress shape matches loaded modules (runs when modules change)
+  useEffect(() => {
+    if (!effectiveFullModules || !effectiveFullModules.length) return;
+
+    setProgress((prev) => {
+      const updated = { ...prev };
+      effectiveFullModules.forEach((m) => {
+        const topicsLen = Array.isArray(m.topics) ? m.topics.length : 0;
+        if (!updated[m.id]) {
+          updated[m.id] = Array(topicsLen).fill(false);
+        } else if (updated[m.id].length < topicsLen) {
+          // if new topics were added, expand array preserving truthy values
+          const arr = [...updated[m.id]];
+          arr.length = topicsLen;
+          for (let i = 0; i < arr.length; i++) {
+            arr[i] = !!arr[i];
+          }
+          updated[m.id] = arr;
+        }
+      });
+      return updated;
+    });
+  }, [effectiveFullModules]);
+
+  // selected module — default to first sheet module when available
+  const [selectedModule, setSelectedModule] = useState(null);
+  useEffect(() => {
+    if (effectiveFullModules && effectiveFullModules.length) {
+      // avoid flipping if already set to same id
+      if (!selectedModule || selectedModule.id !== effectiveFullModules[0].id) {
+        setSelectedModule(effectiveFullModules[0]);
+      }
+    } else {
+      setSelectedModule(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [effectiveFullModules]);
+
   const [leaderboard, setLeaderboard] = useState(
     [...baseLeaderboard].sort((a, b) => b.points - a.points)
   );
   const [leaderboardFilter, setLeaderboardFilter] = useState("all");
 
   const toggleTheme = () => setIsDarkMode((prev) => !prev);
-  const toggleAuth = () => setIsSignedIn((prev) => !prev);
 
   const handleCompleteTopic = (moduleId, topicIndex) => {
-    const already = progress[moduleId][topicIndex];
+    const moduleProgress = progress[moduleId];
+    // guard: if module progress isn't present yet, initialize it from effective modules
+    if (!moduleProgress) {
+      const moduleDef = effectiveFullModules.find((m) => m.id === moduleId);
+      const topicsLen = (moduleDef && Array.isArray(moduleDef.topics)) ? moduleDef.topics.length : 0;
+      setProgress((prev) => ({ ...prev, [moduleId]: Array(topicsLen).fill(false) }));
+    }
+
+    const already = (progress[moduleId] && progress[moduleId][topicIndex]) || false;
     if (already) return;
 
     setProgress((prev) => {
-      const updatedModule = [...prev[moduleId]];
+      const moduleDef = effectiveFullModules.find((m) => m.id === moduleId);
+      const topicsLen = (moduleDef && Array.isArray(moduleDef.topics)) ? moduleDef.topics.length : 0;
+      const updatedModule =
+        prev[moduleId] && prev[moduleId].length
+          ? [...prev[moduleId]]
+          : Array(topicsLen).fill(false);
+
       updatedModule[topicIndex] = true;
       return { ...prev, [moduleId]: updatedModule };
     });
@@ -61,26 +122,31 @@ function App() {
   return (
     <div className={`app ${isDarkMode ? "dark-theme" : "light-theme"}`}>
       <Header
-        isSignedIn={isSignedIn}
         isDarkMode={isDarkMode}
         onToggleTheme={toggleTheme}
-        onToggleAuth={toggleAuth}
+
       />
 
-      {!isSignedIn ? (
-        <LandingPage heroTiles={heroTiles} basicModules={basicModules} />
-      ) : (
-        <Dashboard
-          fullModules={fullModules}
-          selectedModule={selectedModule}
-          setSelectedModule={setSelectedModule}
-          progress={progress}
-          leaderboard={filteredLeaderboard}
-          leaderboardFilter={leaderboardFilter}
-          setLeaderboardFilter={setLeaderboardFilter}
-          onCompleteTopic={handleCompleteTopic}
-        />
-      )}
+      {isLoading ? (
+  <div style={{ padding: 40 }}>Loading...</div>
+) : !isAuthenticated ? (
+  <LandingPage heroTiles={heroTiles} basicModules={[]} />
+) : (
+  <Dashboard
+    fullModules={effectiveFullModules}
+    selectedModule={selectedModule}
+    setSelectedModule={setSelectedModule}
+    progress={progress}
+    leaderboard={filteredLeaderboard}
+    leaderboardFilter={leaderboardFilter}
+    setLeaderboardFilter={setLeaderboardFilter}
+    onCompleteTopic={handleCompleteTopic}
+    refreshSheet={refreshSheet}
+    sheetLoading={sheetLoading}
+    sheetError={sheetError}
+  />
+)}
+
 
       <Footer />
     </div>

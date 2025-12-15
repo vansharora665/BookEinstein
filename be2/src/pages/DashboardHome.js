@@ -4,14 +4,14 @@ import LeaderboardPanel from "./LeaderboardPanel";
 import SummaryCard from "./SummaryCard";
 
 function DashboardHome({
-  avatarOptions,
+  avatarOptions = [],
   currentAvatar,
   setSelectedAvatar,
   handleAvatarUpload,
   modulesCompleted,
-  fullModules,
+  fullModules = [],
   totalDone,
-  totalTopics,
+  totalTopics = 0,
   overallPercent,
   completionForModule,
   selectedModule,
@@ -39,9 +39,9 @@ function DashboardHome({
           <h1 className="hero-card-title">
             Welcome back, Einstein in training 👋
           </h1>
+          {/* show first module description if available, otherwise empty */}
           <p className="hero-card-subtitle">
-            Keep exploring AI concepts, earn XP, and build projects you can
-            showcase in college applications.
+            {fullModules && fullModules[0] && fullModules[0].desc ? fullModules[0].desc : ""}
           </p>
 
           <div className="hero-card-progress-row">
@@ -125,7 +125,7 @@ function DashboardHome({
                   key={a.id}
                   type="button"
                   className={`hero-avatar-chip ${
-                    currentAvatar.id === a.id ? "active" : ""
+                    currentAvatar?.id === a.id ? "active" : ""
                   }`}
                   onClick={() => setSelectedAvatar(a.id)}
                 >
@@ -185,11 +185,12 @@ function DashboardHome({
       {/* MODULES + LEADERBOARD */}
       <section className="dashboard-main-two-column">
         <MyModulesPanel
-          fullModules={fullModules}
+          fullModules={fullModules.slice(0,5)}
           completionForModule={completionForModule}
           selectedModule={selectedModule}
           setSelectedModule={setSelectedModule}
           onStartModule={onStartModule}
+          modulesCompleted={modulesCompleted}
         />
         <LeaderboardPanel
           leaderboard={leaderboard}
@@ -201,5 +202,10 @@ function DashboardHome({
     </>
   );
 }
+console.log("DEBUG PAGE COMPONENTS", {
+  MyModulesPanel,
+  LeaderboardPanel,
+});
+
 
 export default DashboardHome;
