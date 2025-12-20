@@ -1,104 +1,92 @@
-/* ================= DASHBOARD HERO ================= */
-
 .dashboard-hero {
-  background: #00C3D0;
-  border-radius: 24px;
-  margin: 0 24px;
-  padding: 44px;
+  background: linear-gradient(135deg, #00c3d0, #67d3dc);
+  border-radius: 28px;
+  padding: 48px 56px;
+  margin: 24px;
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
+  grid-template-columns: 1.1fr 1fr;
   align-items: center;
   position: relative;
+  overflow: hidden;
+  min-height: 300px;
 }
 
-/* ---------- TEXT ---------- */
-
+/* LEFT CONTENT */
 .hero-left h1 {
   font-size: 42px;
-  font-weight: 600;
-  line-height: 1.2;
+  font-weight: 700;
   color: #ffffff;
+  max-width: 420px;
+  line-height: 1.2;
 }
 
 .hero-left p {
-  margin-top: 16px;
+  margin-top: 14px;
   font-size: 16px;
-  color: #eaffff;
-  max-width: 440px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 480px;
 }
 
-/* ---------- ACTIONS ---------- */
-
+/* BUTTONS */
 .hero-actions {
   margin-top: 28px;
   display: flex;
-  gap: 16px;
+  gap: 18px;
 }
 
-/* Resume Last Course */
-.primary-btn {
-  background: #ffffff;
-  color: #00C3D0;
-  border: none;
+.hero-btn {
   padding: 14px 28px;
-  border-radius: 20px;
-  font-weight: 600;
+  border-radius: 999px;
   font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
 }
 
-/* Explore New Courses */
-.secondary-btn {
+.hero-btn.primary {
+  background: #ffffff;
+  color: #00c3d0;
+  border: none;
+}
+
+.hero-btn.outline {
   background: transparent;
   color: #ffffff;
-  border: 2px solid #ffffff;
-  padding: 14px 28px;
-  border-radius: 20px;
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.8);
 }
 
-/* ---------- HERO IMAGE ---------- */
-
+/* RIGHT ICON FIELD */
 .hero-right {
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
-.hero-main {
-  width: 300px;
-  position: relative;
-  z-index: 3;
-}
-
-/* ---------- FLOATING DECOR IMAGES ---------- */
-
-.hero-float {
+/* ICON BASE */
+.hero-icon {
   position: absolute;
-  width: 42px;
-  z-index: 2;
-  opacity: 0.95;
+  background: transparent;
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: none;
 }
 
-/* Balanced scatter (locked) */
-.f0 { top: 4%; left: 18%; }
-.f1 { top: 12%; right: 20%; }
-.f2 { top: 42%; left: 6%; }
-.f3 { bottom: 30%; left: 22%; }
-.f4 { bottom: 12%; right: 26%; }
-.f5 { top: 46%; right: 6%; }
-.f6 { top: -6%; right: 44%; }
-.f7 { bottom: -6%; left: 44%; }
+/* EXACT SCATTER POSITIONS (MATCH DESIGN) */
+.f0 { top: 8%; left: 10%; width: 80px; }
+.f1 { top: 22%; left: 42%; width: 46px;}
+.f2 { top: 6%; right: 8%; width: 56px;}
+.f3 { top: 38%; right: 8%; width: 70px;}
+.f4 { bottom: 4%; right: 30%; width: 56px;}
+.f5 { bottom: 101%; left: 38%; width: 56px;}
+.f6 { top: 50%; left: 14%; width: 56px;}
+.f7 { bottom: 20%; right: -19%; width: 30px; height: 40px;}
 
-/* ---------- RESPONSIVE ---------- */
-
+/* RESPONSIVE */
 @media (max-width: 1024px) {
   .dashboard-hero {
     grid-template-columns: 1fr;
     text-align: center;
+    padding: 36px 28px;
   }
 
   .hero-actions {
@@ -106,10 +94,6 @@
   }
 
   .hero-right {
-    margin-top: 28px;
-  }
-
-  .hero-float {
-    display: none;
+    display: none; /* hide icons on mobile like design */
   }
 }
