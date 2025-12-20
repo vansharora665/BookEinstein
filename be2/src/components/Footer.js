@@ -1,18 +1,14 @@
-import React from "react";
+import "../styles/footer.css";
 
-function Footer() {
+export default function Footer() {
   return (
-    <footer className="app-footer">
-      <span>
-        © {new Date().getFullYear()} Book Einstein. Crafted for Class 9–12 AI explorers.
-      </span>
-      <div className="footer-links">
-        <button>Help</button>
-        <button>Privacy</button>
-        <button>Terms</button>
+    <footer className="footer">
+      <p>© 2025 Book Einstein. Crafted for AI explorers.</p>
+      <div>
+        <a href="#">Help</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
       </div>
     </footer>
   );
 }
-
-export default Footer;

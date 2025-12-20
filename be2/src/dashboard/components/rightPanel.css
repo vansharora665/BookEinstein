@@ -1,0 +1,124 @@
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* 🔥 Fire Card */
+.fire-card {
+  background: #ff9f0a;
+  border-radius: 24px;
+  padding: 24px;
+  color: white;
+}
+
+.fire-card h3 {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.fire-card p {
+  margin: 12px 0 20px;
+  font-size: 15px;
+}
+
+.fire-card button {
+  background: white;
+  color: #ff9f0a;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* 📊 Learning Hours */
+.learning-hours {
+  background: white;
+  border-radius: 24px;
+  padding: 20px;
+}
+
+.learning-hours h3 {
+  margin-bottom: 16px;
+}
+
+.chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  height: 180px;
+}
+
+.bar-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.bar {
+  width: 36px;
+  background: #eef2ff;
+  border-radius: 16px;
+}
+
+.bar.active {
+  background: #ff9f0a;
+}
+
+.bar-wrap span {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* 🏆 Leaderboard */
+.leaderboard {
+  background: white;
+  border-radius: 24px;
+  padding: 20px;
+}
+
+.leaderboard-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.leaderboard-head span {
+  color: #00c3d0;
+  cursor: pointer;
+}
+
+.leaderboard-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rank {
+  width: 28px;
+  height: 28px;
+  background: #f3f4f6;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 600;
+}
+
+.user p {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.score {
+  font-weight: 600;
+}

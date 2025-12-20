@@ -121,25 +121,48 @@ export function mapRowsToModules(rows) {
     if (!moduleId) return;
 
     if (!modulesMap[moduleId]) {
-      const colorClass = COLOR_CLASSES[hashStringToInt(moduleId) % COLOR_CLASSES.length];
-      modulesMap[moduleId] = {
-        id: moduleId,
-        title: kModuleTitle && row[kModuleTitle] ? String(row[kModuleTitle]).trim() : moduleId,
-        color: colorClass,
-        level: kModuleLevel && row[kModuleLevel] ? String(row[kModuleLevel]).trim() : "Beginner",
-        desc: kModuleDesc && row[kModuleDesc] ? String(row[kModuleDesc]).trim() : "",
-        image: kModuleImage ? convertGoogleDriveLink(row[kModuleImage], "view") : "",
-        topics: [],
-        topicContents: [],
-        activityContents: [],
-        teacherNotes: [],
-        topicImages: [],
-        topicSlides: [],
-        videos: [],
-        summaryVideos: [],
-        quiz: [],
-      };
-    }
+  const colorClass =
+    COLOR_CLASSES[hashStringToInt(moduleId) % COLOR_CLASSES.length];
+
+  modulesMap[moduleId] = {
+    id: moduleId,
+    title:
+      kModuleTitle && row[kModuleTitle]
+        ? String(row[kModuleTitle]).trim()
+        : moduleId,
+    color: colorClass,
+    level:
+      kModuleLevel && row[kModuleLevel]
+        ? String(row[kModuleLevel]).trim()
+        : "Beginner",
+    desc:
+      kModuleDesc && row[kModuleDesc]
+        ? String(row[kModuleDesc]).trim()
+        : "",
+    image: kModuleImage
+      ? convertGoogleDriveLink(row[kModuleImage], "view")
+      : "",
+
+    topics: [],
+    topicContents: [],
+    activityContents: [],
+    teacherNotes: [],
+    topicImages: [],
+    topicSlides: [],
+    videos: [],
+    summaryVideos: [],
+    quiz: [],
+
+    // 🔥 ADD THIS BLOCK ONLY
+    pictureHuntImages: {
+      very_easy: {},
+      easy: {},
+      medium: {},
+      hard: {},
+      very_hard: {},
+    },
+  };
+}
 
     const mod = modulesMap[moduleId];
 
