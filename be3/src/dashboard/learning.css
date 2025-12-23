@@ -1,0 +1,260 @@
+/* =====================================================
+   GLOBAL FOCUS MODE (HIDE CHROME)
+===================================================== */
+
+/* Hide topbar when workspace is open */
+body.workspace-active .topbar,
+body.workspace-active .header,
+body.workspace-active .navbar {
+  display: none !important;
+}
+
+/* Remove extra top spacing */
+body.workspace-active {
+  overflow: hidden;
+}
+
+/* =====================================================
+   BACK BUTTON (BOTTOM LEFT)
+===================================================== */
+
+.back-btn {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #00c3d0;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Mobile safe area */
+@media (max-width: 768px) {
+  .back-btn {
+    bottom: 16px;
+    left: 16px;
+  }
+}
+
+/* =====================================================
+   MODULE DETAIL (TOPICS PAGE)
+===================================================== */
+
+.module-detail {
+  padding: 32px;
+}
+
+/* Header stays LEFT aligned */
+.module-header {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.module-cover {
+  width: 120px;
+  height: 90px;
+  border-radius: 16px;
+  object-fit: cover;
+}
+
+.module-header h1 {
+  font-size: 26px;
+  color: #052143;
+}
+
+.module-header p {
+  margin-top: 6px;
+  color: #6b7a90;
+  max-width: 640px;
+}
+
+/* =====================================================
+   TOPICS LIST – COLOURED FULL CARDS
+===================================================== */
+
+.topics-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 920px;
+}
+
+/* Card base */
+.topic-card {
+  border-radius: 20px;
+  padding: 20px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  color: #052143;
+}
+
+/* Soft colour variants */
+.topic-card:nth-child(1) {
+  background: linear-gradient(135deg, #e8faff, #ffffff);
+}
+.topic-card:nth-child(2) {
+  background: linear-gradient(135deg, #fff6e8, #ffffff);
+}
+.topic-card:nth-child(3) {
+  background: linear-gradient(135deg, #f1ecff, #ffffff);
+}
+.topic-card:nth-child(4) {
+  background: linear-gradient(135deg, #eafff3, #ffffff);
+}
+
+.topic-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+}
+
+.topic-text h3 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.topic-text p {
+  margin-top: 4px;
+  font-size: 14px;
+  color: #6b7a90;
+}
+
+.topic-action {
+  font-weight: 600;
+  color: #00c3d0;
+  font-size: 14px;
+}
+
+/* =====================================================
+   TOPIC WORKSPACE – MAXIMISED
+===================================================== */
+
+.topic-workspace {
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* ❌ Remove topic title completely */
+.topic-workspace h1 {
+  display: none;
+}
+
+/* =====================================================
+   ACTIVITY SHELL – FULL APP MODE
+===================================================== */
+
+.activity-shell {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0;
+  z-index: 900;
+}
+
+/* ❌ Remove activity header title */
+.activity-header h3 {
+  display: none;
+}
+
+/* Header only keeps fullscreen icon */
+.activity-header {
+  height: 52px;
+  padding: 0 16px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  border-bottom: 1px solid #eef2f7;
+}
+
+/* =====================================================
+   ACTIVITY BODY – USE ALL SPACE
+===================================================== */
+
+.activity-body {
+  flex: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Media inside workspace */
+.activity-body iframe,
+.activity-body video,
+.activity-body canvas {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  border: none;
+  border-radius: 0;
+}
+
+/* Images */
+.activity-body img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* =====================================================
+   FOOTER NAVIGATION
+===================================================== */
+
+.activity-footer {
+  height: 64px;
+  padding: 0 24px;
+  border-top: 1px solid #eef2f7;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  background: white;
+}
+
+/* Buttons */
+.next-btn,
+.complete-btn {
+  background: #00c3d0;
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+/* =====================================================
+   MOBILE OPTIMISATION
+===================================================== */
+
+@media (max-width: 768px) {
+  .module-detail {
+    padding: 20px;
+  }
+
+  .topic-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .activity-footer {
+    height: 56px;
+    padding: 0 16px;
+  }
+}

@@ -1,0 +1,181 @@
+/* ========== GLOBAL ========== */
+body {
+  margin: 0;
+  font-family: "Outfit", system-ui, sans-serif;
+  color: #052143;
+  background: #ffffff;
+}
+
+/* ========== NAVBAR BASE ========== */
+.navbar {
+  background: #fffef8;
+  border-bottom: 1px solid #eef2f7;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-inner {
+  max-width: 1280px;
+  margin: auto;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  height: 36px;
+}
+
+/* ========== DESKTOP NAV ========== */
+.nav-links {
+  display: flex;
+  gap: 24px;
+}
+
+.nav-links a {
+  font-size: 16px;
+  color: #052143;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.nav-links .active {
+  color: #ff9500;
+}
+
+.nav-right {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+/* Search */
+.search-box {
+  display: flex;
+  align-items: center;
+  border: 2px solid #dbeafe;
+  border-radius: 999px;
+  padding: 6px 6px 6px 16px;
+  gap: 12px;
+}
+
+.search-box button {
+  background: #ff8a4c;
+  color: white;
+  border-radius: 999px;
+  padding: 6px 14px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Auth buttons */
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.auth-btn {
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.auth-btn.primary {
+  background: #00c3d0;
+  color: white;
+  border: none;
+}
+
+.auth-btn.outline {
+  background: transparent;
+  border: 1.5px solid #052143;
+  color: #052143;
+}
+
+/* Hamburger */
+.menu-btn {
+  display: none;
+  font-size: 26px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* ========== MOBILE MENU (HIDDEN BY DEFAULT) ========== */
+.mobile-menu {
+  display: none;
+}
+
+/* ========== MOBILE ========== */
+@media (max-width: 1024px) {
+  /* Hide desktop nav */
+  .nav-links,
+  .nav-right {
+    display: none;
+  }
+
+  /* Show hamburger */
+  .menu-btn {
+    display: block;
+  }
+
+  /* Show mobile menu ONLY when React renders it */
+  .mobile-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: white;
+    padding: 24px;
+    border-top: 1px solid #eee;
+  }
+
+  .mobile-menu a {
+    font-size: 18px;
+    color: #052143;
+    text-decoration: none;
+  }
+
+  .mobile-search {
+    display: flex;
+    gap: 8px;
+  }
+
+  .mobile-search input {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 100px;
+    border: 1px solid #d1e3fb;
+  }
+
+  .mobile-search button {
+    background: #ff9500;
+    color: white;
+    border-radius: 100px;
+    padding: 10px 16px;
+    border: none;
+  }
+
+  .mobile-signin,
+  .mobile-register {
+    width: 100%;
+    padding: 12px;
+    border-radius: 100px;
+    font-weight: 600;
+    border: none;
+  }
+
+  .mobile-signin {
+    background: #00c3d0;
+    color: white;
+  }
+
+  .mobile-register {
+    background: transparent;
+    color: #052143;
+    border: 1.5px solid #052143;
+  }
+}
