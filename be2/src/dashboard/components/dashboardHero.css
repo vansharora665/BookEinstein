@@ -79,7 +79,7 @@
 .f4 { bottom: 4%; right: 30%; width: 56px;}
 .f5 { bottom: 101%; left: 38%; width: 56px;}
 .f6 { top: 50%; left: 14%; width: 56px;}
-.f7 { bottom: 20%; right: -19%; width: 30px; height: 40px;}
+.f7 { bottom: 20%; right: -23%; width: 40px; height: 40px;}
 
 /* RESPONSIVE */
 @media (max-width: 1024px) {

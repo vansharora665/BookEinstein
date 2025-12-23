@@ -1,53 +1,87 @@
+/* ================= RIGHT PANEL ================= */
+
 .right-panel {
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
 
-/* 🔥 Fire Card */
+/* ================= 🔥 FIRE CARD ================= */
+
 .fire-card {
-  background: #ff9f0a;
-  border-radius: 24px;
-  padding: 24px;
+  background: linear-gradient(135deg, #ff9f0a, #ff7a00);
+  border-radius: 26px;
+  padding: 26px;
   color: white;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(255, 159, 10, 0.35);
+}
+
+/* Decorative glow */
+.fire-card::after {
+  content: "";
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 140px;
+  height: 140px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
 }
 
 .fire-card h3 {
   font-size: 22px;
-  font-weight: 600;
+  font-weight: 700;
+  margin-bottom: 6px;
 }
 
 .fire-card p {
-  margin: 12px 0 20px;
+  margin: 10px 0 22px;
   font-size: 15px;
+  line-height: 1.5;
+  opacity: 0.95;
 }
 
 .fire-card button {
   background: white;
-  color: #ff9f0a;
+  color: #ff8a00;
   border: none;
-  padding: 12px 22px;
-  border-radius: 12px;
+  padding: 12px 24px;
+  border-radius: 999px;
   font-weight: 600;
   cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* 📊 Learning Hours */
+.fire-card button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* ================= 📊 LEARNING HOURS ================= */
+
 .learning-hours {
   background: white;
   border-radius: 24px;
-  padding: 20px;
+  padding: 22px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
 }
 
 .learning-hours h3 {
   margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #0f172a;
 }
 
 .chart {
   display: flex;
   align-items: flex-end;
+  justify-content: space-between;
   gap: 14px;
   height: 180px;
+  padding: 0 6px;
 }
 
 .bar-wrap {
@@ -55,70 +89,129 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  flex: 1;
 }
 
 .bar {
   width: 36px;
-  background: #eef2ff;
+  background: linear-gradient(180deg, #eef2ff, #e5e7eb);
   border-radius: 16px;
+  transition: background 0.2s ease;
 }
 
 .bar.active {
-  background: #ff9f0a;
+  background: linear-gradient(180deg, #ff9f0a, #ff7a00);
 }
 
 .bar-wrap span {
-  font-size: 14px;
+  font-size: 13px;
   color: #6b7280;
 }
 
-/* 🏆 Leaderboard */
+/* ================= 🏆 LEADERBOARD ================= */
+
 .leaderboard {
   background: white;
   border-radius: 24px;
-  padding: 20px;
+  padding: 22px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
 }
 
 .leaderboard-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
+}
+
+.leaderboard-head h3 {
+  font-size: 18px;
+  font-weight: 600;
 }
 
 .leaderboard-head span {
   color: #00c3d0;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
 }
 
+/* ITEM */
 .leaderboard-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 0;
+  padding: 12px 10px;
+  border-radius: 14px;
+  transition: background 0.15s ease;
 }
 
+.leaderboard-item:hover {
+  background: #f8fafc;
+}
+
+/* USER */
 .user {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
+/* RANK BASE */
 .rank {
-  width: 28px;
-  height: 28px;
-  background: #f3f4f6;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   display: grid;
   place-items: center;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 14px;
+  background: #f3f4f6;
+  color: #374151;
 }
 
+/* 🥇🥈🥉 TOP 3 COLORS */
+.leaderboard-item:nth-child(2) .rank {
+  background: linear-gradient(135deg, #ffd700, #ffb703);
+  color: #7a4a00;
+}
+
+.leaderboard-item:nth-child(3) .rank {
+  background: linear-gradient(135deg, #c0c0c0, #a1a1aa);
+  color: #374151;
+}
+
+.leaderboard-item:nth-child(4) .rank {
+  background: linear-gradient(135deg, #cd7f32, #b45309);
+  color: #fff;
+}
+
+/* USER TEXT */
 .user p {
   font-size: 13px;
   color: #6b7280;
+  margin-top: 2px;
 }
 
+/* SCORE */
 .score {
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 15px;
+  color: #0f172a;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 768px) {
+  .right-panel {
+    gap: 18px;
+  }
+
+  .chart {
+    height: 140px;
+  }
+
+  .bar {
+    width: 28px;
+  }
 }

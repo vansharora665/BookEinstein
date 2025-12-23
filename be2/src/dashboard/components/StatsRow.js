@@ -13,11 +13,11 @@ export default function StatsRow({
         value={completed}
         label="Courses Completed"
       />
-      <StatCard
+      {/* <StatCard
         icon="/dashboard/stat-certificate.png"
         value={certificates}
         label="Certificates Earned"
-      />
+      /> */}
       <StatCard
         icon="/dashboard/stat-hours.png"
         value={hours.toFixed(1)}
@@ -36,7 +36,7 @@ function StatCard({ icon, value, label }) {
   return (
     <div className="stat-card">
       <img src={icon} alt={label} />
-      <div>
+      <div className="stat-card-content">
         <h3>{value}</h3>
         <p>{label}</p>
       </div>

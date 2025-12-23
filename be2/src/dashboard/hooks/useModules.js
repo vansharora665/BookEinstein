@@ -2,48 +2,29 @@ import { useEffect, useState } from "react";
 import { fetchSheet } from "../../utils/fetchSheet";
 import { mapRowsToModules } from "../../utils/mapSheetToModules";
 
-// TEMP: fallback row so dashboard NEVER breaks
-const FALLBACK_ROWS = [
-  {
-    "Module ID": "fallback",
-    "Module Title": "Loading Module",
-    "Topic Title": "Initializing",
-  },
-];
-
-const SHEET_ID = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTuiciaYMWtSJtw3Z-Pv99DDnD4rbklFRAsVgPrE-0vwR_TzKHu3NSxe-YNZJ-B1V9aZWDVUD1RLInu/pub?output=csv";
-const GID = "0";
-
 export function useModules() {
-  const [modules, setModules] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [modules, setModules] = useState(null); // 🔑 null = not loaded yet
 
   useEffect(() => {
-    async function load() {
+    async function loadModules() {
       try {
-        console.log("Fetching sheet…");
-        const rows = await fetchSheet(SHEET_ID, GID);
-        console.log("Rows fetched:", rows);
+        console.log("📥 Fetching Excel sheet…");
+
+        const rows = await fetchSheet();
+        console.log("📄 Rows fetched:", rows.length);
 
         const mapped = mapRowsToModules(rows);
-        console.log("Mapped modules:", mapped);
+        console.log("📦 Modules mapped:", mapped.length);
 
-        if (mapped.length === 0) {
-          console.warn("Mapper returned empty, using fallback");
-          setModules(mapRowsToModules(FALLBACK_ROWS));
-        } else {
-          setModules(mapped);
-        }
-      } catch (e) {
-        console.error("Sheet load failed:", e);
-        setModules(mapRowsToModules(FALLBACK_ROWS));
-      } finally {
-        setLoading(false);
+        setModules(mapped);
+      } catch (err) {
+        console.error("❌ Failed to load modules:", err);
+        setModules([]); // fail-safe
       }
     }
 
-    load();
+    loadModules();
   }, []);
 
-  return loading ? [] : modules;
+  return modules;
 }

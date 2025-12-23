@@ -1,6 +1,6 @@
 import "./continueLearning.css";
 
-export default function ContinueLearning({ module }) {
+export default function ContinueLearning({ module, onSeeAll }) {
   if (!module) return null;
 
   const totalTopics = module.topics.length;
@@ -13,6 +13,19 @@ export default function ContinueLearning({ module }) {
 
   return (
     <section className="continue-learning">
+
+        <div className="cl-top">
+  <span className="cl-badge">Continue Learning</span>
+
+  <button
+    className="cl-seeall"
+    onClick={onSeeAll}
+    aria-label="See all courses"
+  >
+    See all
+  </button>
+</div>
+
       {/* LEFT IMAGE */}
       <div className="cl-image">
         {module.image && (
@@ -22,7 +35,6 @@ export default function ContinueLearning({ module }) {
 
       {/* MIDDLE CONTENT */}
       <div className="cl-content">
-        <span className="cl-badge">Continue Learning</span>
 
         <h3>{module.title}</h3>
 

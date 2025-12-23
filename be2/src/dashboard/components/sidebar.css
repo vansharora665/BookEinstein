@@ -1,3 +1,4 @@
+/* SIDEBAR BASE */
 .sidebar {
   width: 260px;
   min-height: 100vh;
@@ -5,77 +6,115 @@
   border-right: 1px solid #eef2f7;
   display: flex;
   flex-direction: column;
-  padding: 24px 16px;
-}
-
-.sidebar-logo {
-  margin-bottom: 32px;
-}
-
-.sidebar-logo img {
-  height: 42px;
-}
-
-.sidebar-section {
-  margin-bottom: 32px;
-}
-
-.sidebar-section.bottom {
-  margin-top: auto;
-}
-
-.sidebar-title {
-  font-size: 12px;
-  letter-spacing: 1px;
-  color: #9aa4b2;
-  margin-bottom: 12px;
-}
-
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.sidebar-nav a {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
-  border-radius: 12px;
-  font-size: 15px;
-  color: #4b5563;
-  cursor: pointer;
-}
-
-.sidebar-nav a.active {
-  background: #fff1dc;
-  color: #ff9500;
-  font-weight: 600;
-}
-.sidebar {
-  width: 260px;
+  padding: 20px 14px;
   transition: width 0.25s ease;
 }
 
+/* COLLAPSED */
 .sidebar.collapsed {
   width: 80px;
 }
 
-/* Scholar hat button */
+/* LOGO / TOGGLE */
+.sidebar-logo {
+  margin-bottom: 24px;
+}
+
 .collapse-btn {
-  font-size: 24px;
-  background: #fff1dc;
+  font-size: 22px;
+  background: #fff4e6;
   border: none;
   border-radius: 12px;
   padding: 10px;
   cursor: pointer;
 }
 
+/* SECTIONS */
+.sidebar-section {
+  margin-bottom: 24px;
+}
+
+.sidebar-section.bottom {
+  margin-top: auto;
+}
+
+/* TITLES */
+.sidebar-title {
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #9aa4b2;
+  margin: 8px 12px;
+}
+
+/* NAV */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* NAV ITEM */
+.sidebar-nav a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 15px;
+  color: #4b5563;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* ICON — 🔥 FIX */
+.sidebar-icon {
+  width: 28px;
+  min-width: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+/* TEXT */
+.sidebar-text {
+  white-space: nowrap;
+}
+
+/* ACTIVE (SOFT PILL) */
+.sidebar-nav a.active {
+  background: #fff3e6;
+  color: #ff8a00;
+  font-weight: 600;
+}
+
+/* COLLAPSED STATE */
+.sidebar.collapsed .sidebar-text,
 .sidebar.collapsed .sidebar-title {
   display: none;
 }
 
 .sidebar.collapsed .sidebar-nav a {
   justify-content: center;
+  padding: 12px 0;
+}
+
+/* KEEP HIGHLIGHT WHEN COLLAPSED */
+.sidebar.collapsed .sidebar-nav a.active {
+  background: #fff3e6;
+}
+
+/* HOVER */
+.sidebar-nav a:hover {
+  background: #f6f8fb;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    z-index: 100;
+    height: 100vh;
+  }
 }

@@ -18,14 +18,12 @@ export default function DashboardHero() {
         <div className="hero-actions">
           <button
             className="hero-btn primary"
-            aria-label="Resume last course"
           >
             Resume Course
           </button>
 
           <button
             className="hero-btn outline"
-            aria-label="Explore new courses"
           >
             Explore Courses
           </button>
