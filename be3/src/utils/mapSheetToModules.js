@@ -74,6 +74,10 @@ function detectActivityType(item) {
     return { id, type: "quiz", title: "Quiz" };
   }
 
+  if (v === "aiornot") {
+    return { type: "game", game: "AiOrNot" };
+  }
+
   if (v.match(/\.(mp3|wav|ogg)$/)) {
     return { id, type: "audio", title: "Audio", src: raw };
   }
@@ -167,6 +171,8 @@ function parseAIDetection(cell) {
 export function mapRowsToModules(rows) {
   if (!Array.isArray(rows) || rows.length === 0) return [];
 
+  
+
   const modulesMap = {};
 
   rows.forEach((row) => {
@@ -258,30 +264,39 @@ if (kActivity && row[kActivity]) {
 
     // ✅ Quiz
     if (row[kQuizQuestion]) {
-      const options = [
-        row[kQuizOptionA],
-        row[kQuizOptionB],
-        row[kQuizOptionC],
-        row[kQuizOptionD],
-      ].filter(Boolean);
+  const options = [
+    row[kQuizOptionA],
+    row[kQuizOptionB],
+    row[kQuizOptionC],
+    row[kQuizOptionD],
+  ]
+    .map((o) => (o ? o.toString().trim() : null))
+    .filter(Boolean);
 
-      let answer = -1;
-      const val = row[kCorrectAnswer]?.toString().toLowerCase();
-      if (["a", "1"].includes(val)) answer = 0;
-      if (["b", "2"].includes(val)) answer = 1;
-      if (["c", "3"].includes(val)) answer = 2;
-      if (["d", "4"].includes(val)) answer = 3;
+  let answer = -1;
 
-      mod.quiz[index].push({
-        id: `${moduleId}-${index}-q${mod.quiz[index].length + 1}`,
-        type: options.length ? "mcq" : "truefalse",
-        q: row[kQuizQuestion],
-        options,
-        answer,
-        correctFeedback: row["quizCorrectFeedback"] || "",
-        incorrectFeedback: row["quizInorrectFeedback"] || "",
-      });
-    }
+  if (row[kCorrectAnswer]) {
+    const correctValue = row[kCorrectAnswer]
+      .toString()
+      .trim()
+      .toLowerCase();
+
+    answer = options.findIndex(
+      (opt) => opt.toLowerCase() === correctValue
+    );
+  }
+
+  mod.quiz[index].push({
+    id: `${moduleId}-${index}-q${mod.quiz[index].length + 1}`,
+    type: options.length > 2 ? "mcq" : "truefalse",
+    q: row[kQuizQuestion],
+    options,
+    answer, // ✅ now correct index
+    correctFeedback: row["quizCorrectFeedback"] || "",
+    incorrectFeedback: row["quizIncorrectFeedback"] || "",
+  });
+}
+
   });
 
   return Object.values(modulesMap);

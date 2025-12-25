@@ -24,6 +24,13 @@ export default function Dashboard() {
   const [activeModule, setActiveModule] = useState(null);
   const [activeTopicIndex, setActiveTopicIndex] = useState(null);
 
+  // ✅ SINGLE SOURCE OF NAVIGATION TRUTH
+  function navigateTo(view) {
+    setActiveView(view);
+    setActiveModule(null);
+    setActiveTopicIndex(null);
+  }
+
   const modules = useModules();
   const { currentModule } = useProgress(modules);
   const hours = useLearningTimer(true);
@@ -36,18 +43,20 @@ export default function Dashboard() {
     );
   }
 
+  const isInWorkspace = activeModule && activeTopicIndex !== null;
+
   return (
     <div className="dashboard-layout">
       {/* SIDEBAR */}
-      <Sidebar setActiveView={setActiveView} />
+      <Sidebar navigateTo={navigateTo} />
 
       <main className="dashboard-main">
-        <Topbar />
+        {/* 🔥 HIDE TOPBAR IN WORKSPACE */}
+        {!isInWorkspace && <Topbar />}
 
         {/* ================= DASHBOARD HOME ================= */}
         {activeView === "dashboard" && !activeModule && (
           <div className="dashboard-grid">
-            {/* LEFT COLUMN */}
             <div className="dashboard-left">
               <DashboardHero />
 
@@ -60,11 +69,10 @@ export default function Dashboard() {
 
               <ContinueLearning
                 module={currentModule}
-                onSeeAll={() => setActiveView("modules")}
+                onSeeAll={() => navigateTo("modules")}
               />
             </div>
 
-            {/* RIGHT COLUMN */}
             <RightPanel />
           </div>
         )}
@@ -84,10 +92,7 @@ export default function Dashboard() {
         {activeModule && activeTopicIndex === null && (
           <ModuleDetail
             module={activeModule}
-            onBack={() => {
-              setActiveModule(null);
-              setActiveView("modules");
-            }}
+            onBack={() => navigateTo("modules")}
             onOpenTopic={(index) => setActiveTopicIndex(index)}
           />
         )}

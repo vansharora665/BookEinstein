@@ -2,6 +2,8 @@ import { useMemo, useState, useEffect, useRef } from "react";
 import ProfessionalQuiz from "./ProfessionalQuiz";
 import "./learning.css";
 import AIDetectionQuiz from "../components/activities/AIDetectionQuiz";
+import AiOrNotGame from "../games/AiOrNot";
+
 
 
 export default function TopicWorkspace({
@@ -32,11 +34,11 @@ export default function TopicWorkspace({
   
 
   // INTRO (always first)
-  arr.push({
-    id: `intro-${topicIndex}`,
-    type: "intro",
-    title: "Introduction",
-  });
+//   arr.push({
+//     id: `intro-${topicIndex}`,
+//     type: "intro",
+//     title: "Introduction",
+//   });
 
   // ✅ ACTIVITIES (already parsed by mapper)
   const activities = module.activities?.[topicIndex] || [];
@@ -106,20 +108,7 @@ export default function TopicWorkspace({
 
         {/* BODY */}
         <div className="activity-body" ref={bodyRef}>
-          {current.type === "intro" && (
-            <>
-              {module.topicImages?.[topicIndex] && (
-                <img
-                  className="topic-image"
-                  src={module.topicImages[topicIndex]}
-                  alt="topic"
-                />
-              )}
-              <p className="topic-desc">
-                {module.topicContents?.[topicIndex]}
-              </p>
-            </>
-          )}
+          
 
           {current.type === "audio" && (
             <audio key={current.id} controls style={{ width: "100%" }}>
@@ -151,6 +140,13 @@ export default function TopicWorkspace({
               }}
             />
           )}
+
+          {current.type === "game" && current.game === "AiOrNot" && (
+  <div style={{ width: "100%", height: "100%" }}>
+    <AiOrNotGame />
+  </div>
+)}
+
 
           {current.type === "iframe" && (
             <iframe

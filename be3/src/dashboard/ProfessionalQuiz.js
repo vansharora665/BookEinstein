@@ -1,6 +1,7 @@
 // src/components/pages/ProfessionalQuiz.jsx
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import "./professionalQuiz.css";
 
 /**
  * ProfessionalQuiz
@@ -496,7 +497,7 @@ useEffect(() => {
                   <>
                     <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
                       {/* question icon */}
-                      <div style={{ width: 56, height: 56, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg, var(--accent), var(--purple))", color: "#fff", fontWeight: 800, boxShadow: "0 8px 30px rgba(0,0,0,0.12)" }}>
+                      <div style={{ width: 56, height: 56, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg, var(--accent), var(--purple))", color: "#1ae5deff", fontWeight: 800, boxShadow: "0 8px 30px rgba(0,0,0,0.12)" }}>
                         {index + 1}
                       </div>
 

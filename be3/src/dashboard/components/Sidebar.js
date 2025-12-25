@@ -1,13 +1,13 @@
 import { useState } from "react";
 import "./sidebar.css";
 
-export default function Sidebar({ setActiveView }) {
+export default function Sidebar({ navigateTo }) {
   const [collapsed, setCollapsed] = useState(false);
   const [active, setActive] = useState("dashboard");
 
   const handleClick = (view) => {
     setActive(view);
-    setActiveView(view);
+    navigateTo(view); // ✅ CENTRAL NAVIGATION
   };
 
   return (

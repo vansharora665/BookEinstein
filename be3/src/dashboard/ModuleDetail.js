@@ -30,20 +30,37 @@ export default function ModuleDetail({
       <div className="topics-list">
         {module.topics.map((topic, i) => (
           <div
-            key={i}
-            className="topic-card"
-            onClick={() => onOpenTopic(i)}
-          >
-            <div className="topic-text">
-              <h3>{topic}</h3>
-              <p>
-                {module.topicContents[i]?.slice(0, 90) ||
-                  "Start this topic"}
-              </p>
-            </div>
+  key={i}
+  className={`topic-card topic-color-${i % 6}`}
+  onClick={() => onOpenTopic(i)}
+>
+  {/* LEFT: Topic image or fallback color */}
+  <div
+    className="topic-thumb"
+    style={{
+      backgroundImage: module.topicImages?.[i]
+        ? `url(${module.topicImages[i]})`
+        : "none",
+    }}
+  >
+    {!module.topicImages?.[i] && (
+      <span className="topic-fallback" />
+    )}
+  </div>
 
-            <span className="topic-action">Start →</span>
-          </div>
+  {/* CENTER: Text */}
+  <div className="topic-text">
+    <h3>{topic}</h3>
+    <p>
+      {module.topicContents?.[i]?.slice(0, 90) ||
+        "Start this topic"}
+    </p>
+  </div>
+
+  {/* RIGHT: Action */}
+  <span className="topic-action">Start →</span>
+</div>
+
         ))}
       </div>
     </div>
