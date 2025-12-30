@@ -1,0 +1,139 @@
+.dashboard-hero {
+  background: linear-gradient(135deg, #00c3d0, #67d3dc);
+  border-radius: 28px;
+  padding: 48px 56px;
+  margin: 24px;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 300px;
+}
+
+/* ================= LEFT CONTENT ================= */
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* AVATAR + TEXT ROW */
+.hero-greeting {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* AVATAR */
+.hero-avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  background: white;
+}
+
+/* TEXT */
+.hero-text h1 {
+  font-size: 30px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.hero-text h1 span {
+  color: #ffffff;
+}
+
+.hero-text p {
+  margin-top: 6px;
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+}
+
+/* ================= BUTTONS ================= */
+.hero-actions {
+  display: flex;
+  gap: 18px;
+}
+
+.hero-btn {
+  padding: 14px 28px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.hero-btn.primary {
+  background: #ffffff;
+  color: #00c3d0;
+  border: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.hero-btn.primary:hover {
+  transform: translateY(-2px);
+}
+
+.hero-btn.outline {
+  background: transparent;
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+}
+
+.hero-btn.outline:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ================= RIGHT ICON FIELD ================= */
+.hero-right {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* ICON BASE */
+.hero-icon {
+  position: absolute;
+  background: transparent;
+  border-radius: 16px;
+}
+
+/* EXACT SCATTER POSITIONS */
+.f0 { top: 8%; left: 10%; width: 80px; }
+.f1 { top: 22%; left: 42%; width: 46px; }
+.f2 { top: 6%; right: 8%; width: 56px; }
+.f3 { top: 38%; right: 8%; width: 70px; }
+.f4 { bottom: 4%; right: 30%; width: 56px; }
+.f5 { bottom: 10%; left: 38%; width: 56px; }
+.f6 { top: 50%; left: 14%; width: 56px; }
+.f7 { bottom: 20%; right: -23%; width: 40px; }
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 1024px) {
+  .dashboard-hero {
+    grid-template-columns: 1fr;
+    padding: 36px 28px;
+    text-align: center;
+  }
+
+  .hero-greeting {
+    justify-content: center;
+  }
+
+  .hero-actions {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .hero-right {
+    display: none;
+  }
+}
