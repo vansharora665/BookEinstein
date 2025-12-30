@@ -24,7 +24,7 @@ export default function WhyChooseUs() {
     </p>
   </div>
 
-  <img src="/why/join.png" alt="Join Our Classes" />
+  <img src="/why/join.png" alt="Join Our Classes" className="join-img"/>
 </div>
 
       </div>

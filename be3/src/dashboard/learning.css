@@ -89,6 +89,7 @@ body.workspace-active {
 
 /* Card base */
 .topic-card {
+  position: relative;
   display: grid;
   grid-template-columns: 72px 1fr auto;
   gap: 14px;
@@ -145,7 +146,7 @@ body.workspace-active {
 
 
 /* Soft colour variants */
-.topic-card:nth-child(1) {
+/* .topic-card:nth-child(1) {
   background: linear-gradient(135deg, #e8faff, #ffffff);
 }
 .topic-card:nth-child(2) {
@@ -156,7 +157,7 @@ body.workspace-active {
 }
 .topic-card:nth-child(4) {
   background: linear-gradient(135deg, #eafff3, #ffffff);
-}
+} */
 /* ===== TOPIC COLOR PALETTE (CYCLIC) ===== */
 
 .topic-color-0 { --tc: #e6f7ff; --tc-dark: #b3e5ff; }
@@ -248,10 +249,10 @@ body.workspace-active {
 
 .activity-footer {
   height: 64px;
-  padding: 0 24px;
+  padding: 16px 24px;
   border-top: 1px solid #eef2f7;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   background: white;
 }
@@ -287,5 +288,127 @@ body.workspace-active {
   .activity-footer {
     height: 56px;
     padding: 0 16px;
+    flex-wrap: wrap;
+    display: flex;
   }
 }
+/* LOCKED STATE */
+.topic-card.locked {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* LOCK ICON */
+.topic-card.locked .topic-lock {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 28px;
+  background: rgba(0, 0, 0, 0.35);
+  color: white;
+  border-radius: 14px;
+  z-index: 5;
+}
+
+/* PROGRESS */
+.topic-progress {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #6b7a90;
+}
+
+.topic-progress-bar {
+  flex: 1;
+  height: 6px;
+  background: #e5eaf1;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.topic-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00c3d0, #00e0c6);
+  border-radius: 999px;
+}
+.activity-footer-left,
+.activity-footer-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Previous button style */
+.prev-btn {
+  background: none;
+  border: 1px solid #e5eaf1;
+  color: #052143;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.prev-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* 🔴 CRITICAL: stop overlap */
+.back-btn,
+.prev-btn,
+.next-btn,
+.complete-btn {
+  position: static !important;
+}
+@media (max-width: 640px) {
+  .activity-footer {
+    flex-direction: column;
+    height: auto;
+    gap: 12px;
+  }
+
+  .activity-footer-left,
+  .activity-footer-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+/* =====================================================
+   FULLSCREEN LOGO (AUTHENTICITY)
+===================================================== */
+
+/* =====================================================
+   WORKSPACE BRAND LOGO (ALWAYS VISIBLE IN ACTIVITY)
+===================================================== */
+
+.workspace-logo {
+  position: fixed;
+  top: 14px;
+  left: 16px;
+  z-index: 10001; /* higher than iframe & activity shell */
+  pointer-events: none;
+}
+
+.workspace-logo img {
+  height: 34px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .workspace-logo {
+    top: 10px;
+    left: 12px;
+  }
+
+  .workspace-logo img {
+    height: 28px;
+  }
+}
+

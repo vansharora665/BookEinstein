@@ -92,9 +92,17 @@ export default function TopicWorkspace({
   
   return (
     <div className="topic-workspace">
+
+      {/* 🔰 BRAND LOGO – visible whenever activity is open */}
+<div className="workspace-logo">
+  <img src="/navbar/logo.png" alt="Platform Logo" />
+</div>
+
       <h1>{module.topics?.[topicIndex]}</h1>
+      
 
       <div className={`activity-shell ${fullscreen ? "fullscreen" : ""}`}>
+
         {/* HEADER */}
         <div className="activity-header">
           <h3>{current.title || "Activity"}</h3>
@@ -192,28 +200,62 @@ export default function TopicWorkspace({
 
         {/* FOOTER */}
         <div className="activity-footer">
-          <button
-            className="back-btn"
-            onClick={() =>
-              step > 0 ? setStep(step - 1) : onExit()
-            }
-          >
-            ← Back
-          </button>
+  {/* LEFT SIDE */}
+  <div className="activity-footer-left">
+    <button
+      className="back-btn"
+      onClick={onExit}
+    >
+      ← Back to Topics
+    </button>
 
-          {step < blocks.length - 1 ? (
-            <button
-              className="next-btn"
-              onClick={() => setStep(step + 1)}
-            >
-              Next →
-            </button>
-          ) : (
-            <button className="complete-btn" onClick={onExit}>
-              Mark Topic Complete
-            </button>
-          )}
-        </div>
+    <button
+      className="prev-btn"
+      disabled={step === 0}
+      onClick={() => setStep(step - 1)}
+    >
+      ← Previous
+    </button>
+  </div>
+
+  {/* RIGHT SIDE */}
+  <div className="activity-footer-right">
+    {step < blocks.length - 1 ? (
+      <button
+        className="next-btn"
+        onClick={() => {
+          const percentPerActivity = Math.round(100 / blocks.length);
+
+          window.updateTopicProgress?.(
+            module.id,
+            topicIndex,
+            percentPerActivity
+          );
+
+          setStep(step + 1);
+        }}
+      >
+        Next →
+      </button>
+    ) : (
+      <button
+        className="complete-btn"
+        onClick={() => {
+          window.updateTopicProgress?.(
+            module.id,
+            topicIndex,
+            100
+          );
+          onExit();
+        }}
+      >
+        Mark Topic Complete
+      </button>
+    )}
+  </div>
+</div>
+
+
       </div>
     </div>
   );

@@ -1,8 +1,9 @@
 import "./modules.css";
+import Loader from "../common/Loader";
 
 export default function ModulesPage({ modules, onSelectModule }) {
   if (!modules || modules.length === 0) {
-    return <div className="modules-loading">Loading courses…</div>;
+    return <Loader text="Loading your dashboard..." />;
   }
 
   return (

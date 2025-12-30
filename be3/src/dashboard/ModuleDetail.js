@@ -2,6 +2,7 @@ import "./learning.css";
 
 export default function ModuleDetail({
   module,
+  topicProgress = {},
   onBack,
   onOpenTopic,
 }) {
@@ -13,6 +14,7 @@ export default function ModuleDetail({
         ← Back to Modules
       </button>
 
+      {/* MODULE HEADER */}
       <div className="module-header">
         {module.image && (
           <img
@@ -27,41 +29,71 @@ export default function ModuleDetail({
         </div>
       </div>
 
+      {/* TOPICS LIST */}
       <div className="topics-list">
-        {module.topics.map((topic, i) => (
-          <div
-  key={i}
-  className={`topic-card topic-color-${i % 6}`}
-  onClick={() => onOpenTopic(i)}
->
-  {/* LEFT: Topic image or fallback color */}
-  <div
-    className="topic-thumb"
-    style={{
-      backgroundImage: module.topicImages?.[i]
-        ? `url(${module.topicImages[i]})`
-        : "none",
-    }}
-  >
-    {!module.topicImages?.[i] && (
-      <span className="topic-fallback" />
-    )}
-  </div>
+        {module.topics.map((topic, i) => {
+          const progress = topicProgress[i] || 0;
 
-  {/* CENTER: Text */}
-  <div className="topic-text">
-    <h3>{topic}</h3>
-    <p>
-      {module.topicContents?.[i]?.slice(0, 90) ||
-        "Start this topic"}
-    </p>
-  </div>
+          // 🔒 LOCK LOGIC
+          const isLocked =
+            i > 0 && (topicProgress[i - 1] || 0) < 100;
 
-  {/* RIGHT: Action */}
-  <span className="topic-action">Start →</span>
-</div>
+          return (
+            <div
+              key={i}
+              className={`topic-card topic-color-${i % 6} ${
+                isLocked ? "locked" : ""
+              }`}
+              onClick={() => {
+                if (!isLocked) onOpenTopic(i);
+              }}
+            >
+              {/* LEFT: Topic image or fallback */}
+              <div
+                className="topic-thumb"
+                style={{
+                  backgroundImage: module.topicImages?.[i]
+                    ? `url(${module.topicImages[i]})`
+                    : "none",
+                }}
+              >
+                {!module.topicImages?.[i] && (
+                  <span className="topic-fallback" />
+                )}
 
-        ))}
+                {/* 🔒 LOCK ICON */}
+                {isLocked && (
+                  <div className="topic-lock">🔒</div>
+                )}
+              </div>
+
+              {/* CENTER: Text */}
+              <div className="topic-text">
+                <h3>{topic}</h3>
+                <p>
+                  {module.topicContents?.[i]?.slice(0, 90) ||
+                    "Start this topic"}
+                </p>
+
+                {/* ✅ PROGRESS BAR */}
+                <div className="topic-progress">
+                  <div className="topic-progress-bar">
+                    <div
+                      className="topic-progress-fill"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                  <span>{progress}%</span>
+                </div>
+              </div>
+
+              {/* RIGHT: ACTION */}
+              <span className="topic-action">
+                {isLocked ? "Locked" : progress === 100 ? "Completed ✓" : "Start →"}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

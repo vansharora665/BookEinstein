@@ -1,0 +1,280 @@
+.profile-hub {
+  padding: 28px;
+  max-width: 960px;
+}
+
+/* HEADER */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 26px;
+}
+
+.profile-avatar-large {
+  width: 86px;
+  height: 86px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #00c3d0, #00e0c6);
+  padding: 4px;
+}
+
+.profile-avatar-large img {
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+  background: white;
+}
+
+.profile-header h1 {
+  margin: 0;
+  font-size: 26px;
+  color: #052143;
+}
+
+.profile-header p {
+  margin-top: 4px;
+  color: #6b7a90;
+  font-size: 14px;
+}
+
+/* TABS */
+.hub-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 26px;
+}
+
+.hub-tabs button {
+  padding: 10px 26px;
+  border-radius: 999px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  background: #f1f5f9;
+  color: #475569;
+  transition: 0.2s;
+}
+
+.hub-tabs button.active {
+  background: linear-gradient(135deg, #00c3d0, #00e0c6);
+  color: white;
+}
+
+/* CARD */
+.card {
+  background: white;
+  border-radius: 22px;
+  padding: 24px;
+  margin-bottom: 22px;
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.06);
+}
+
+.gradient-card {
+  background: linear-gradient(135deg, #ecfeff, #f0fdfa);
+}
+
+/* AVATAR */
+.avatar-row {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.avatar-wrap {
+  width: 86px;
+  height: 86px;
+  padding: 4px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.avatar-wrap img {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  background: white;
+}
+
+.avatar-wrap.active {
+  background: linear-gradient(135deg, #00c3d0, #00e0c6);
+  transform: scale(1.06);
+}
+
+/* FORM */
+.form-grid {
+  display: grid;
+  gap: 16px;
+  max-width: 380px;
+}
+
+.form-grid input {
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  margin-top: 6px;
+}
+
+/* STATS */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.stat {
+  background: #f8fafc;
+  border-radius: 18px;
+  padding: 22px;
+  text-align: center;
+}
+
+.stat.highlight {
+  background: linear-gradient(135deg, #00c3d0, #00e0c6);
+  color: white;
+}
+
+.stat strong {
+  font-size: 28px;
+}
+
+/* SCORES */
+.score-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.score-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.score-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.progress-bar {
+  width: 120px;
+  height: 8px;
+  background: #e5eaf1;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-bar div {
+  height: 100%;
+  background: linear-gradient(90deg, #00c3d0, #00e0c6);
+}
+
+.pill {
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.pill.good {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.pill.bad {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* LEADERBOARD */
+.leaderboard {
+  margin-top: 12px;
+}
+
+.leader-row {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  align-items: center;
+  padding: 14px;
+  border-radius: 16px;
+  margin-bottom: 10px;
+  background: #f8fafc;
+}
+
+.leader-row.me {
+  background: linear-gradient(135deg, #ecfeff, #f0fdfa);
+  font-weight: 700;
+}
+
+.rank {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+}
+
+.r-1 { background: gold; }
+.r-2 { background: silver; }
+.r-3 { background: #cd7f32; }
+
+.points {
+  font-weight: 700;
+}
+/* ================= PERSONAL INFO FORM ================= */
+
+.profile-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 18px;
+  margin-top: 16px;
+  padding: 20px;
+  border-radius: 18px;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 195, 208, 0.08),
+    rgba(103, 211, 220, 0.12)
+  );
+}
+
+/* Label styling */
+.profile-form-row label {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  font-weight: 600;
+  color: #052143;
+  gap: 6px;
+}
+
+/* Input styling */
+.profile-form-row input {
+  padding: 14px 14px;
+  border-radius: 14px;
+  border: 1.5px solid #dbe7ee;
+  font-size: 14px;
+  background: white;
+  transition: all 0.2s ease;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+}
+
+/* Focus effect */
+.profile-form-row input:focus {
+  outline: none;
+  border-color: #00c3d0;
+  box-shadow: 0 0 0 4px rgba(0, 195, 208, 0.15);
+}
+
+/* Date input cursor fix */
+.profile-form-row input[type="date"] {
+  cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .profile-form-row {
+    grid-template-columns: 1fr;
+  }
+}

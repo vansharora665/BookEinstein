@@ -1,6 +1,6 @@
 import "./continueLearning.css";
 
-export default function ContinueLearning({ module, onSeeAll }) {
+export default function ContinueLearning({ module, onSeeAll, onResume }) {
   if (!module) return null;
 
   const totalTopics = module.topics.length;
@@ -46,9 +46,13 @@ export default function ContinueLearning({ module, onSeeAll }) {
 
       {/* RIGHT BUTTON */}
       <div className="cl-action">
-        <button className="cl-btn">
-          Resume Course
-        </button>
+        <button
+  className="cl-btn"
+  onClick={() => onResume()}
+>
+  Resume Course
+</button>
+
       </div>
 
       {/* PROGRESS (BOTTOM FULL WIDTH) */}

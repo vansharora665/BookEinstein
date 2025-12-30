@@ -27,6 +27,14 @@ export default function Sidebar({ navigateTo }) {
         {!collapsed && <p className="sidebar-title">MAIN MENU</p>}
 
         <nav className="sidebar-nav">
+
+          <a
+            className={active === "profile" ? "active" : ""}
+            onClick={() => handleClick("profile")}
+          >
+            <span className="sidebar-icon">👤</span>
+            {!collapsed && <span className="sidebar-text">Profile</span>}
+          </a>
           <a
             className={active === "dashboard" ? "active" : ""}
             onClick={() => handleClick("dashboard")}

@@ -157,7 +157,7 @@
 
 .icon.alarm {
   left: -30px;
-  bottom: 100px;
+  bottom: 0px;
   transform: rotate(-8deg);
   width: 60px;
   height: 60px;
@@ -166,8 +166,11 @@
 
 .icon.bulb {
   position: absolute;
-  outline: 2px solid red;
-  background: rgba(255,0,0,0.2);
+  left: -30px;
+  bottom: 650px;
+  transform: rotate(-8deg);
+  width: 60px;
+  height: 60px;
 }
 
 .icon.like {
