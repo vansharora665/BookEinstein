@@ -35,8 +35,8 @@ export default function ModuleDetail({
           const progress = topicProgress[i] || 0;
 
           // 🔒 LOCK LOGIC
-          const isLocked =
-            i > 0 && (topicProgress[i - 1] || 0) < 100;
+          const isLocked = false;
+            // i > 0 && (topicProgress[i - 1] || 0) < 100;
 
           return (
             <div
