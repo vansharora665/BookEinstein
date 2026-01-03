@@ -243,14 +243,6 @@ const activityTitle = current?.title;
               <button className="back-btn" onClick={onExit}>
                 ← Back to Topics
               </button>
-
-              <button
-                className="prev-btn"
-                disabled={step === 0}
-                onClick={() => setStep(step - 1)}
-              >
-                ← Previous
-              </button>
             </div>
 
             <div className="activity-footer-right">
