@@ -9,6 +9,10 @@ body.workspace-active.fullscreen-active .navbar {
 /* Remove extra top spacing */
 body.workspace-active {
   overflow: hidden;
+  position: fixed;
+  width: 100%;
+  top: 0;
+
 }
 
 /* =====================================================

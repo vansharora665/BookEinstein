@@ -58,6 +58,11 @@ export default function Dashboard() {
   }
 
   function openTopic(index) {
+
+    if (!activeModule) return;
+
+  // ✅ RESET SCROLL BEFORE OPENING WORKSPACE
+  window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     pushBrowserState({
       view: "topic",
       moduleId: activeModule.id,
