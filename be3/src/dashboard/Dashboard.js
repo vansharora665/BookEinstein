@@ -18,160 +18,181 @@ import { useProgress } from "./hooks/useProgress";
 import { useLearningTimer } from "./hooks/useLearningTimer";
 import Loader from "../common/Loader";
 
-
-// 🔑 make available to TopicWorkspace
-
-
-
 export default function Dashboard() {
-  // 🔁 VIEW STATE
-  const [activeView, setActiveView] = useState("dashboard");
+  /* ===============================
+     DATA HOOKS (TOP LEVEL ONLY)
+  =============================== */
+  const modules = useModules();
+  const { currentModule } = useProgress(modules);
+  const hours = useLearningTimer(true);
   
 
-  // 📦 LEARNING FLOW STATE
+  /* ===============================
+     VIEW STATE
+  =============================== */
+  const [activeView, setActiveView] = useState("dashboard");
   const [activeModule, setActiveModule] = useState(null);
   const [activeTopicIndex, setActiveTopicIndex] = useState(null);
 
-  // 🧠 TOPIC PROGRESS STATE (NEW)
-  // topicProgress[moduleId][topicIndex] = percentage
   const [topicProgressMap, setTopicProgressMap] = useState({});
+  
+  /* ===============================
+     BROWSER STATE
+  =============================== */
+  function pushBrowserState(state) {
+    window.history.pushState(state, "", window.location.pathname);
+  }
 
-  // ✅ SINGLE SOURCE OF NAVIGATION TRUTH
   function navigateTo(view) {
+    pushBrowserState({ view });
     setActiveView(view);
     setActiveModule(null);
     setActiveTopicIndex(null);
   }
 
-  // ✅ ACTIVITY → TOPIC PROGRESS HANDLER (NEW)
-  function handleActivityComplete(moduleId, topicIndex, totalActivities) {
+  function openModule(module) {
+    pushBrowserState({ view: "modules", moduleId: module.id });
+    setActiveView("modules");
+    setActiveModule(module);
+    setActiveTopicIndex(null);
+  }
+
+  function openTopic(index) {
+    pushBrowserState({
+      view: "topic",
+      moduleId: activeModule.id,
+      topicIndex: index,
+    });
+    setActiveTopicIndex(index);
+  }
+
+  function exitTopic() {
+    pushBrowserState({
+      view: "modules",
+      moduleId: activeModule.id,
+    });
+    setActiveTopicIndex(null);
+  }
+
+  /* ===============================
+     BACK BUTTON
+  =============================== */
+  useEffect(() => {
+    const handler = (e) => {
+      const state = e.state;
+
+      if (!state) {
+        setActiveView("dashboard");
+        setActiveModule(null);
+        setActiveTopicIndex(null);
+        return;
+      }
+
+      setActiveView(state.view || "dashboard");
+
+      if (state.moduleId && modules) {
+        const mod = modules.find((m) => m.id === state.moduleId);
+        setActiveModule(mod || null);
+      } else {
+        setActiveModule(null);
+      }
+
+      setActiveTopicIndex(
+        state.topicIndex !== undefined ? state.topicIndex : null
+      );
+    };
+
+    window.addEventListener("popstate", handler);
+    return () => window.removeEventListener("popstate", handler);
+  }, [modules]);
+
+  /* ===============================
+     PROGRESS
+  =============================== */
+  function updateTopicProgress(moduleId, topicIndex, increment) {
     setTopicProgressMap((prev) => {
-      const moduleProg = prev[moduleId] || {};
-      const current = moduleProg[topicIndex] || 0;
-      const increment = 100 / totalActivities;
+      const moduleProgress = prev[moduleId] || {};
+      const current = moduleProgress[topicIndex] || 0;
 
       return {
         ...prev,
         [moduleId]: {
-          ...moduleProg,
+          ...moduleProgress,
           [topicIndex]: Math.min(100, current + increment),
         },
       };
     });
   }
-  function updateTopicProgress(moduleId, topicIndex, increment) {
-  setTopicProgressMap((prev) => {
-    const key = `${moduleId}-${topicIndex}`;
-    const current = prev[key] || 0;
-    const next = Math.min(100, current + increment);
 
-    return {
-      ...prev,
-      [key]: next,
-    };
-  });
+  useEffect(() => {
+    window.updateTopicProgress = updateTopicProgress;
+    return () => delete window.updateTopicProgress;
+  }, []);
+
+  /* ===============================
+     BODY STATE
+  =============================== */
+  useEffect(() => {
+    const isWorkspace = activeModule && activeTopicIndex !== null;
+    document.body.classList.toggle("workspace-active", isWorkspace);
+    return () => document.body.classList.remove("workspace-active");
+  }, [activeModule, activeTopicIndex]);
+  
+  /* ===============================
+     LOADING
+  =============================== */
+  if (modules === null) {
+  return <Loader text="Loading your dashboard..." />;
 }
 
-useEffect(() => {
-  const isWorkspace = activeModule && activeTopicIndex !== null;
-
-  if (!isWorkspace) {
-    document.body.classList.remove("workspace-active");
-  }
-}, [activeModule, activeTopicIndex, activeView]);
-
-
-window.updateTopicProgress = updateTopicProgress;
-
-  const modules = useModules();
-  const { currentModule } = useProgress(modules);
-  const hours = useLearningTimer(true);
-
-  if (!modules) {
-    return <Loader text="Loading your dashboard..." />;
-  }
 
   const isInWorkspace = activeModule && activeTopicIndex !== null;
 
+  /* ===============================
+     RENDER
+  =============================== */
   return (
     <div className="dashboard-layout">
-      {/* SIDEBAR */}
-      <Sidebar navigateTo={navigateTo} />
+<Sidebar navigateTo={navigateTo} activeView={activeView} />
 
       <main className="dashboard-main">
-        {/* 🔥 HIDE TOPBAR IN WORKSPACE */}
         {!isInWorkspace && <Topbar />}
 
-        {/* ================= DASHBOARD HOME ================= */}
         {activeView === "dashboard" && !activeModule && (
           <div className="dashboard-grid">
             <div className="dashboard-left">
               <DashboardHero />
-
-              <StatsRow
-                completed={1}
-                certificates={2}
-                hours={hours}
-                streak={3}
-              />
-
+              <StatsRow completed={1} certificates={2} hours={hours} streak={3} />
               <ContinueLearning
-  module={currentModule}
-  onSeeAll={() => navigateTo("modules")}
-  onResume={() => {
-    if (!currentModule) return;
-
-    setActiveView("modules");   // ensures correct layout
-    setActiveModule(currentModule);
-    setActiveTopicIndex(null);  // opens topic list
-  }}
-/>
-
+                module={currentModule}
+                onSeeAll={() => navigateTo("modules")}
+                onResume={() => currentModule && openModule(currentModule)}
+              />
             </div>
-
             <RightPanel />
           </div>
         )}
 
-        {/* ================= MODULES LIST ================= */}
         {activeView === "modules" && !activeModule && (
-          <ModulesPage
-            modules={modules}
-            onSelectModule={(module) => {
-              setActiveModule(module);
-              setActiveTopicIndex(null);
-            }}
+          <ModulesPage modules={modules} onSelectModule={openModule} />
+        )}
+
+        {activeView === "profile" && <Profile />}
+
+        {activeModule && activeTopicIndex === null && (
+          <ModuleDetail
+            module={activeModule}
+            topicProgress={topicProgressMap[activeModule.id] || {}}
+            onBack={() => navigateTo("modules")}
+            onOpenTopic={openTopic}
           />
         )}
 
-        {/* ================= PROFILE ================= */}
-        {activeView === "profile" && <Profile />}
-
-        {/* ================= MODULE DETAIL (TOPICS) ================= */}
-        {activeModule && activeTopicIndex === null && (
-  <ModuleDetail
-    module={activeModule}
-    topicProgress={Object.fromEntries(
-      Object.entries(topicProgressMap)
-        .filter(([k]) => k.startsWith(activeModule.id))
-        .map(([k, v]) => [
-          Number(k.split("-")[1]),
-          v,
-        ])
-    )}
-    onBack={() => navigateTo("modules")}
-    onOpenTopic={(index) => setActiveTopicIndex(index)}
-  />
-)}
-
-
-        {/* ================= TOPIC WORKSPACE ================= */}
         {activeModule && activeTopicIndex !== null && (
           <TopicWorkspace
             module={activeModule}
             topicIndex={activeTopicIndex}
-            onExit={() => setActiveTopicIndex(null)}
-            onActivityComplete={handleActivityComplete}
+            onExit={exitTopic}
           />
         )}
       </main>

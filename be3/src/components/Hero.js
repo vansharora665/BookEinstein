@@ -1,10 +1,9 @@
 import "../styles/hero.css";
 
-
 export default function Hero() {
   return (
-    <section className="hero">
-      {/* BACKGROUND TEXTURE (CSS or IMAGE) */}
+    <section id="home" className="hero">
+      {/* BACKGROUND TEXTURE */}
       <div className="hero-bg" />
 
       <div className="hero-inner">
@@ -17,53 +16,52 @@ export default function Hero() {
           />
 
           <h1 className="hero-title">
-            Learn <span className="ai">AI</span> Like A Pro <br />
-            Even Before <span className="your">Your</span> <br />
-            <span className="college">College</span>
-          </h1>
+  Your Journey Into <span className="ai">AI</span> <br />
+  Starts <span className="college">Early</span> <br />
+  Starts <span className="ai">Here</span>
+</h1>
+
+
+
           <span className="hero-curve"></span>
 
-          <p>
-            Convenience of online education, allowing learners to acquire new
-            skills at their own pace and from any location.
-          </p>
+          <p className="hero-subtext">
+  Beginner-friendly AI courses designed for school students —
+  learn concepts, practice with activities, and get future-ready.
+</p>
 
+
+          {/* ONLY ENROLL BUTTON */}
           <div className="hero-actions">
-  <button className="hero-btn">
-    Enroll Now
-    <span className="arrow">→</span>
-  </button>
-
-  <button className="secondary">
-    🎥 Quality Video
-  </button>
-
-  <button className="secondary">
-    💰 Suitable Price
-  </button>
-</div>
-
+            <button className="hero-btn">
+              Enroll Now
+              <span className="arrow">→</span>
+            </button>
+          </div>
 
           {/* FLOATING ICONS */}
-          <img src="/hero/alarm.png" className="icon alarm" />
-          <img src="/hero/bulb.png" className="icon bulb" />
-          <img src="/hero/like.png" className="icon like" />
+          <img src="/hero/alarm.png" className="icon alarm" alt="" />
+          <img src="/hero/bulb.png" className="icon bulb" alt="" />
+          <img src="/hero/like.png" className="icon like" alt="" />
         </div>
 
         {/* RIGHT */}
         <div className="hero-image">
-          <img src="/hero/main.png" alt="student" className=".hero-main-image"/>
+          <img
+            src="/hero/main.png"
+            alt="student"
+            className="hero-main-image"
+          />
 
           <img
-  src="/hero/success-badge.png"
-  alt="Success students"
-  className="hero-success"
-/>
-
+            src="/hero/success-badge.png"
+            alt="Success students"
+            className="hero-success"
+          />
         </div>
       </div>
 
-      {/* WAVE BOTTOM */}
+      {/* WAVE */}
       <img src="/hero/wave.png" className="hero-wave" alt="wave" />
     </section>
   );

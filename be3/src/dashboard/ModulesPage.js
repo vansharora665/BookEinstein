@@ -2,9 +2,25 @@ import "./modules.css";
 import Loader from "../common/Loader";
 
 export default function ModulesPage({ modules, onSelectModule }) {
-  if (!modules || modules.length === 0) {
-    return <Loader text="Loading your dashboard..." />;
+  if (modules === null) {
+    return <Loader text="Loading courses..." />;
   }
+
+  // SAFETY CHECK (prevents crash)
+  if (!Array.isArray(modules)) {
+    console.error("❌ Modules is not array:", modules);
+    return <div>Something went wrong loading courses.</div>;
+  }
+
+  if (modules.length === 0) {
+    return (
+      <div style={{ padding: 40 }}>
+        <h2>No courses found</h2>
+        <p>Please check your Google Sheet data.</p>
+      </div>
+    );
+  }
+
 
   return (
     <div className="modules-page">

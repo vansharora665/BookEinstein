@@ -1,13 +1,11 @@
 import { useState } from "react";
 import "./sidebar.css";
 
-export default function Sidebar({ navigateTo }) {
+export default function Sidebar({ navigateTo, activeView }) {
   const [collapsed, setCollapsed] = useState(false);
-  const [active, setActive] = useState("dashboard");
 
   const handleClick = (view) => {
-    setActive(view);
-    navigateTo(view); // ✅ CENTRAL NAVIGATION
+    navigateTo(view); // ✅ SINGLE SOURCE OF NAVIGATION
   };
 
   return (
@@ -27,69 +25,69 @@ export default function Sidebar({ navigateTo }) {
         {!collapsed && <p className="sidebar-title">MAIN MENU</p>}
 
         <nav className="sidebar-nav">
-
-          <a
-            className={active === "profile" ? "active" : ""}
+          <SidebarItem
+            icon="👤"
+            label="Profile"
+            active={activeView === "profile"}
+            collapsed={collapsed}
             onClick={() => handleClick("profile")}
-          >
-            <span className="sidebar-icon">👤</span>
-            {!collapsed && <span className="sidebar-text">Profile</span>}
-          </a>
-          <a
-            className={active === "dashboard" ? "active" : ""}
+          />
+
+          <SidebarItem
+            icon="🏠"
+            label="Dashboard"
+            active={activeView === "dashboard"}
+            collapsed={collapsed}
             onClick={() => handleClick("dashboard")}
-          >
-            <span className="sidebar-icon">🏠</span>
-            <span className="sidebar-text">Dashboard</span>
-          </a>
+          />
 
-          <a
-            className={active === "modules" ? "active" : ""}
+          <SidebarItem
+            icon="📘"
+            label="Courses"
+            active={activeView === "modules"}
+            collapsed={collapsed}
             onClick={() => handleClick("modules")}
-          >
-            <span className="sidebar-icon">📘</span>
-            <span className="sidebar-text">Courses</span>
-          </a>
+          />
 
-          <a
-            className={active === "browse" ? "active" : ""}
+          <SidebarItem
+            icon="🔍"
+            label="Browse Courses"
+            active={activeView === "browse"}
+            collapsed={collapsed}
             onClick={() => handleClick("browse")}
-          >
-            <span className="sidebar-icon">🔍</span>
-            <span className="sidebar-text">Browse Courses</span>
-          </a>
+          />
 
-          <a
-            className={active === "quizzes" ? "active" : ""}
+          <SidebarItem
+            icon="📝"
+            label="Quizzes & Scores"
+            active={activeView === "quizzes"}
+            collapsed={collapsed}
             onClick={() => handleClick("quizzes")}
-          >
-            <span className="sidebar-icon">📝</span>
-            <span className="sidebar-text">Quizzes & Scores</span>
-          </a>
+          />
 
-          <a
-            className={active === "achievements" ? "active" : ""}
+          <SidebarItem
+            icon="🏆"
+            label="Achievements"
+            active={activeView === "achievements"}
+            collapsed={collapsed}
             onClick={() => handleClick("achievements")}
-          >
-            <span className="sidebar-icon">🏆</span>
-            <span className="sidebar-text">Achievements</span>
-          </a>
+          />
 
-          <a
-            className={active === "leaderboard" ? "active" : ""}
+          <SidebarItem
+            icon="📊"
+            label="Leaderboard"
+            active={activeView === "leaderboard"}
+            collapsed={collapsed}
             onClick={() => handleClick("leaderboard")}
-          >
-            <span className="sidebar-icon">📊</span>
-            <span className="sidebar-text">Leaderboard</span>
-          </a>
+          />
 
-          <a
-            className={active === "activities" ? "active" : ""}
+          <SidebarItem
+            icon="⚡"
+            label="Activities"
+            active={activeView === "activities"}
+            collapsed={collapsed}
             onClick={() => handleClick("activities")}
-          >
-            <span className="sidebar-icon">⚡</span>
-            <span className="sidebar-text">Activities</span>
-          </a>
+          />
         </nav>
       </div>
 
@@ -97,23 +95,47 @@ export default function Sidebar({ navigateTo }) {
         {!collapsed && <p className="sidebar-title">SETTINGS</p>}
 
         <nav className="sidebar-nav">
-          <a
-            className={active === "settings" ? "active" : ""}
+          <SidebarItem
+            icon="⚙️"
+            label="Settings"
+            active={activeView === "settings"}
+            collapsed={collapsed}
             onClick={() => handleClick("settings")}
-          >
-            <span className="sidebar-icon">⚙️</span>
-            <span className="sidebar-text">Settings</span>
-          </a>
+          />
 
-          <a
-            className={active === "help" ? "active" : ""}
+          <SidebarItem
+            icon="❓"
+            label="Help"
+            active={activeView === "help"}
+            collapsed={collapsed}
             onClick={() => handleClick("help")}
-          >
-            <span className="sidebar-icon">❓</span>
-            <span className="sidebar-text">Help</span>
-          </a>
+          />
         </nav>
       </div>
     </aside>
+  );
+}
+
+/* ===============================
+   REUSABLE ITEM (ANIMATED)
+================================ */
+
+function SidebarItem({ icon, label, active, collapsed, onClick }) {
+  return (
+    <a
+      className={`sidebar-item ${active ? "active" : ""}`}
+      onClick={onClick}
+    >
+      <span className="sidebar-icon">{icon}</span>
+
+      <span
+        className={`sidebar-text ${collapsed ? "hidden" : ""}`}
+      >
+        {label}
+      </span>
+
+      {/* Active indicator */}
+      <span className="active-indicator" />
+    </a>
   );
 }

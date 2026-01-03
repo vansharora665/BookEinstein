@@ -10,6 +10,7 @@ export default function ModuleDetail({
 
   return (
     <div className="module-detail">
+      {/* ✅ FIXED BACK BUTTON */}
       <button className="back-btn" onClick={onBack}>
         ← Back to Modules
       </button>
@@ -34,9 +35,9 @@ export default function ModuleDetail({
         {module.topics.map((topic, i) => {
           const progress = topicProgress[i] || 0;
 
-          // 🔒 LOCK LOGIC
+          // 🔒 LOCK LOGIC (currently disabled intentionally)
           const isLocked = false;
-            // i > 0 && (topicProgress[i - 1] || 0) < 100;
+          // const isLocked = i > 0 && (topicProgress[i - 1] || 0) < 100;
 
           return (
             <div
@@ -61,10 +62,7 @@ export default function ModuleDetail({
                   <span className="topic-fallback" />
                 )}
 
-                {/* 🔒 LOCK ICON */}
-                {isLocked && (
-                  <div className="topic-lock">🔒</div>
-                )}
+                {isLocked && <div className="topic-lock">🔒</div>}
               </div>
 
               {/* CENTER: Text */}
@@ -75,7 +73,7 @@ export default function ModuleDetail({
                     "Start this topic"}
                 </p>
 
-                {/* ✅ PROGRESS BAR */}
+                {/* PROGRESS */}
                 <div className="topic-progress">
                   <div className="topic-progress-bar">
                     <div
@@ -89,7 +87,11 @@ export default function ModuleDetail({
 
               {/* RIGHT: ACTION */}
               <span className="topic-action">
-                {isLocked ? "Locked" : progress === 100 ? "Completed ✓" : "Start →"}
+                {isLocked
+                  ? "Locked"
+                  : progress === 100
+                  ? "Completed ✓"
+                  : "Start →"}
               </span>
             </div>
           );

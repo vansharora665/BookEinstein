@@ -1,0 +1,19 @@
+/* Hide platform sidebar when inside topic */
+body.workspace-active .sidebar {
+  display: none !important;
+}
+
+/* Expand dashboard content to full width */
+body.workspace-active .dashboard-main {
+  margin-left: 0 !important;
+  width: 100% !important;
+}
+/* 🚫 Hide MAIN app sidebar completely in workspace */
+body.workspace-active .sidebar {
+  display: none !important;
+}
+
+/* 🚫 Remove reserved space */
+body.workspace-active .dashboard-layout {
+  grid-template-columns: 1fr !important;
+}

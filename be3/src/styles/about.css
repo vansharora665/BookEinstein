@@ -1,6 +1,6 @@
 .about {
   position: relative;
-  padding: 120px 24px;
+  padding: 80px 18px;
 }
 
 .about-inner {
@@ -121,7 +121,7 @@
 .about-content h2 {
   font-size: 40px;
   font-weight: 800;
-  margin: 16px 0;
+  margin: 10px 0;
 }
 
 .about-content h2 span {
@@ -135,22 +135,28 @@
   bottom: -6px;
   left: 0;
   width: 100%;
-  height: 4px;
+  height: 1px;
   background: #ff9f2e;
-  border-radius: 10px;
+  border-radius: 20px;
+  left: 0;
+
+  border-bottom: 6px solid #ff9f2e;
+  border-radius: 0 0 100% 100%;
+
+  transform: rotate(-182deg);
 }
 
 .about-content p {
   color: #64748b;
-  margin-top: 20px;
+  margin-top: 15px;
   max-width: 520px;
 }
 
 /* FEATURES */
 .about-features {
   display: flex;
-  gap: 40px;
-  margin-top: 40px;
+  gap: 30px;
+  margin-top: 30px;
 }
 
 .feature {
@@ -203,7 +209,7 @@
 
 /* ACTIONS */
 .about-actions {
-  margin-top: 40px;
+  margin-top: 0px;
   display: flex;
   align-items: center;
   gap: 24px;
@@ -420,4 +426,113 @@
     flex-wrap: wrap;
     gap: 16px;
   }
+}
+/* Mission / Vision image */
+.feature-img {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+  flex-shrink: 0;
+
+  padding: 10px;
+  border-radius: 14px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(0, 195, 208, 0.15),
+    rgba(255, 138, 76, 0.15)
+  );
+
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* Align image + text nicely */
+.feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+/* Small hover polish (optional but recommended) */
+.feature:hover .feature-img {
+  transform: translateY(-2px) scale(1.05);
+  transition: 0.25s ease;
+}
+/* ========================= */
+/* FONT SYSTEM — ADD ONLY */
+/* ========================= */
+
+/* GLOBAL DEFAULT */
+.about {
+  font-family: 'Outfit', sans-serif;
+}
+
+/* SECTION TAG */
+.about-tag {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
+
+/* MAIN HEADING */
+.about-content h2 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+}
+
+/* HIGHLIGHT WORD (Curiosity) */
+
+.about-content h2 span {
+  position: relative;
+  display: inline-block;
+  font-family: 'Roboto Serif', serif;
+  font-style: italic;
+  font-weight: 100;
+}
+
+
+/* PARAGRAPH TEXT */
+.about-content p {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+/* FEATURE TITLES */
+.feature h4 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+}
+
+/* FEATURE PARAGRAPHS */
+.feature p {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 400;
+}
+
+/* LIVE CLASS — playful handwritten look */
+.live-class {
+  font-family: 'Comic Neue', cursive;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+/* EXPERIENCE BADGE */
+.exp-number {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+}
+
+.exp-years,
+.exp-label {
+  font-family: 'Roboto Serif', serif;
+  font-style: italic;
+  font-weight: 500;
+}
+.about-para {
+  margin: 0;
+}
+
+.about-para + .about-para {
+  margin-top: 12px; /* control spacing here */
 }

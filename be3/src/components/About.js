@@ -1,9 +1,8 @@
 import "../styles/about.css";
 
-
 export default function About() {
   return (
-    <section className="about">
+    <section id="about" className="about">
       {/* Decorative star */}
       <img src="/about/star.png" className="about-star" alt="star" />
 
@@ -17,10 +16,7 @@ export default function About() {
           />
 
           <div className="about-card">
-            <img
-              src="/about/3.png"
-              alt="AI"
-            />
+            <img src="/about/3.png" alt="AI" />
           </div>
 
           <img
@@ -29,22 +25,18 @@ export default function About() {
             alt="student"
           />
 
-          {/* EXPERIENCE BADGE (CSS GENERATED) */}
-            <div className="experience-pill">
-  <img src="/about/bulb.png" alt="experience bulb" />
+          {/* EXPERIENCE BADGE */}
+          <div className="experience-pill">
+            <img src="/about/bulb.png" alt="experience bulb" />
 
-  <div className="exp-text">
-    <div className="exp-top">
-      <span className="exp-number">25+</span>
-      <span className="exp-years">Years</span>
-    </div>
-
-    <span className="exp-label">of experience</span>
-  </div>
-</div>
-
-
-
+            <div className="exp-text">
+              <div className="exp-top">
+                <span className="exp-number">25+</span>
+                <span className="exp-years">Years</span>
+              </div>
+              <span className="exp-label">of experience</span>
+            </div>
+          </div>
         </div>
 
         {/* RIGHT CONTENT */}
@@ -52,36 +44,57 @@ export default function About() {
           <span className="about-tag">● About Us</span>
 
           <h2>
-            Our Story: Built On Values, <br />
-            Driven By <span>Innovation</span>
+            Built for Students, <br />
+            Powered by <span>Curiosity</span>
           </h2>
 
-          <p>
-            We are dedicated to transforming education through digital
-            innovation, making learning more accessible, engaging, and
-            effective for everyone. By integrating cutting-edge technology,
-            we aim to create an inclusive and dynamic learning environment.
-          </p>
+
+          <p className="about-para">
+  Learning shouldn’t feel confusing, boring, or overwhelming.
+  We built this platform to help students learn with confidence —
+  not pressure.
+</p>
+
+<p className="about-para">
+  By blending technology, creativity, and real-world examples,
+            we make complex ideas simple, engaging, and enjoyable. Our goal
+            is to help students build skills that actually matter and feel
+            excited about learning every day.
+</p>
 
           <div className="about-features">
+            {/* MISSION */}
             <div className="feature">
-              <div className="icon mission"></div>
+              <img
+                src="/about/mission.png"
+                alt="Mission"
+                className="feature-img"
+              />
+
               <div>
                 <h4>Our Mission</h4>
                 <p>
-                  To provide innovative digital education solutions that
-                  empower learners and educators.
+                  To help students learn smarter, think creatively, and build
+                  future-ready skills through interactive,
+                  technology-driven education.
                 </p>
               </div>
             </div>
 
+            {/* VISION */}
             <div className="feature">
-              <div className="icon vision"></div>
+              <img
+                src="/about/vision.png"
+                alt="Vision"
+                className="feature-img"
+              />
+
               <div>
                 <h4>Our Vision</h4>
                 <p>
-                  To be a leader in digital education, enabling lifelong
-                  learning through accessible platforms.
+                  To inspire a generation of confident learners by making
+                  high-quality education accessible, engaging, and designed
+                  around how students actually learn.
                 </p>
               </div>
             </div>
@@ -89,7 +102,7 @@ export default function About() {
 
           <div className="about-actions">
             <button className="about-btn">» Know More</button>
-            <span className="live-class">Live Class</span>
+            
           </div>
         </div>
       </div>

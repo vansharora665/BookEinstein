@@ -1,8 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap");
+
+
 /* ========== HERO ========== */
 .hero {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(180deg, #f6fffb 0%, #ecfeff 100%);
+  /* background: linear-gradient(180deg, #f6fffb 0%, #ecfeff 100%); */
 }
 
 .hero-bg {
@@ -24,10 +28,12 @@
 }
 
 .hero-text h1 {
-  font-size: 56px;
+  font-size: 86px;
   font-weight: 800;
   line-height: 1.15;
   letter-spacing: -0.5px;
+  color: #76bb5b;
+  font-family: "Space Grotesk", system-ui, sans-serif;
 }
 
 .hero-text .ai {
@@ -105,7 +111,7 @@
 }
 
 
-.hero-title {
+/* .hero-title {
   font-size: 64px;
   font-weight: 800;
   line-height: 1.1;
@@ -114,15 +120,15 @@
   position: relative;
   font-family: 'Outfit', sans-serif;
   
-}
+} */
 
-.hero-title .accent {
+/* .hero-title .accent {
   color: #f59e0b;
 }
 
 .hero-title .highlight {
   color: #5ecad3;
-}
+} */
 
 /* BLUE CURVE */
 .hero-curve {
@@ -198,7 +204,7 @@
 
 /* RIGHT IMAGE */
 .hero-image img {
-  max-width: 100%;
+  max-width: 70%;
 }
 
   .hero-success {
@@ -306,5 +312,57 @@
   /* SCALE DOWN HERO IMAGE */
   .hero-image img {
     max-width: 280px;
+  }
+}
+/* FIX TEXT COLORS */
+
+
+
+.hero-subtext {
+  color: #475569; /* softer contrast */
+}
+
+/* REMOVE UNUSED BUTTON STYLES SAFELY */
+.hero-actions .secondary {
+  display: none;
+}
+
+/* RESPONSIVE IMAGE SCALING — POSITIONS UNCHANGED */
+.hero-main-image {
+  max-width: 100%;
+  height: auto;
+  transform: scale(1);
+  transition: transform 0.3s ease;
+}
+
+.hero-success {
+  max-width: 280px;
+  height: auto;
+}
+
+/* SCALE DOWN IMAGES — SAME POSITIONS */
+@media (max-width: 1024px) {
+  .hero-main-image {
+    transform: scale(0.9);
+  }
+
+  .hero-success {
+    transform: scale(0.85) translateX(-160px);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-main-image {
+    transform: scale(0.8);
+  }
+
+  .hero-success {
+    transform: scale(0.75);
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-main-image {
+    transform: scale(0.7);
   }
 }

@@ -2,33 +2,37 @@ import "../styles/pricing.css";
 
 export default function Pricing() {
   return (
-    <section className="pricing">
-      <h2>
-        Your Source for Ideas, <br />
-        Insights, and <span>Inspiration</span>
-      </h2>
+    <section id="contact" className="pricing">
+      <div className="contact-cta">
+        {/* LEFT CONTENT */}
+        <div className="contact-content">
+          <span className="contact-tag">📞 Contact Us</span>
 
-      <div className="price-grid">
-        {["Basic","Standard","Premium"].map(plan => (
-          <div key={plan} className="price-card">
-            <h3>{plan}</h3>
-            <ul>
-              <li>✔ Courses</li>
-              <li>✔ Videos</li>
-              <li>✔ Enhanced Security</li>
-            </ul>
-            <button>Enroll Now</button>
+          <h3>Let’s Build Your Learning Journey Together</h3>
+
+          <p>
+            Have questions about our courses, curriculum, or learning approach?
+            Our team is here to guide you every step of the way. Reach out to us
+            anytime — we’d love to hear from you.
+          </p>
+
+          <div className="contact-details">
+            <div>
+              <strong>Email:</strong> support@yourplatform.com
+            </div>
+            <div>
+              <strong>Phone:</strong> +91 98765 43210
+            </div>
+            <div>
+              <strong>Location:</strong> Bengaluru, India
+            </div>
           </div>
-        ))}
-      </div>
 
-      <div className="cta">
-        <div>
-          <h3>Ready to Grow with Logo?</h3>
-          <p>Lorem ipsum dolor sit amet consectetur.</p>
-          <button>Get Started</button>
+          <button className="contact-btn">Get in Touch</button>
         </div>
-        <img src="/pricing/cta.png" alt="cta" />
+
+        {/* RIGHT IMAGE */}
+        <img src="/pricing/cta.png" alt="Contact illustration" />
       </div>
     </section>
   );

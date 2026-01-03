@@ -1,13 +1,10 @@
-/* =====================================================
-   GLOBAL FOCUS MODE (HIDE CHROME)
-===================================================== */
 
-/* Hide topbar when workspace is open */
-body.workspace-active .topbar,
-body.workspace-active .header,
-body.workspace-active .navbar {
+
+/* Hide navbar ONLY in fullscreen */
+body.workspace-active.fullscreen-active .navbar {
   display: none !important;
 }
+
 
 /* Remove extra top spacing */
 body.workspace-active {
@@ -19,9 +16,6 @@ body.workspace-active {
 ===================================================== */
 
 .back-btn {
-  position: fixed;
-  bottom: 24px;
-  left: 24px;
   z-index: 1000;
   background: rgba(255, 255, 255, 0.9);
   border-radius: 999px;
@@ -173,8 +167,7 @@ body.workspace-active {
 
 .topic-workspace {
   padding: 0;
-  width: 100vw;
-  height: 100vh;
+   
 }
 
 /* ❌ Remove topic title completely */
@@ -187,14 +180,43 @@ body.workspace-active {
 ===================================================== */
 
 .activity-shell {
-  position: fixed;
-  inset: 0;
-  background: #ffffff;
+  margin-top: 0;
+  background: white;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.12);
   display: flex;
   flex-direction: column;
-  border-radius: 0;
-  z-index: 900;
+  overflow: hidden;
+  height: calc(100vh - 80px);
 }
+body.fullscreen-active .activity-shell {
+  width: 100vw !important;
+  height: 100vh !important;
+}
+/* Fullscreen overrides */
+.activity-shell.fullscreen {
+  
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+  z-index: 9999;
+}
+
+.activity-shell.fullscreen .activity-header,
+.activity-shell.fullscreen .activity-footer {
+  display: none !important;
+}
+
+
+/* Hide breadcrumb in fullscreen */
+
+
+body.workspace-active .dashboard-main {
+  padding: 0 !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  width: 100vw;
+}
+
 
 /* ❌ Remove activity header title */
 .activity-header h3 {
@@ -221,7 +243,7 @@ body.workspace-active {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  background: #000;
 }
 
 /* Media inside workspace */
@@ -233,7 +255,7 @@ body.workspace-active {
   max-width: 100%;
   max-height: 100%;
   border: none;
-  border-radius: 0;
+  border-radius: 0 !important;
 }
 
 /* Images */
@@ -248,14 +270,17 @@ body.workspace-active {
 ===================================================== */
 
 .activity-footer {
-  height: 64px;
+  position: sticky;
   padding: 16px 24px;
+  background: #ffffff;
   border-top: 1px solid #eef2f7;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: white;
+  bottom: 0;
+  z-index: 5;
 }
+
 
 /* Buttons */
 .next-btn,
@@ -386,12 +411,17 @@ body.workspace-active {
    WORKSPACE BRAND LOGO (ALWAYS VISIBLE IN ACTIVITY)
 ===================================================== */
 
+/* HIDE MAIN DASHBOARD SIDEBAR COMPLETELY */
+body.workspace-active .sidebar {
+  display: none !important;
+}
+
+
 .workspace-logo {
-  position: fixed;
-  top: 14px;
-  left: 16px;
+  
   z-index: 10001; /* higher than iframe & activity shell */
   pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
 .workspace-logo img {
@@ -399,7 +429,10 @@ body.workspace-active {
   width: auto;
   object-fit: contain;
 }
-
+/* body.fullscreen-active .workspace-logo {
+  opacity: 0;
+  pointer-events: none;
+} */
 /* Mobile adjustments */
 @media (max-width: 768px) {
   .workspace-logo {
@@ -412,3 +445,258 @@ body.workspace-active {
   }
 }
 
+
+
+/* ===============================
+   ACTIVITY NAV (LEFT SIDEBAR)
+================================ */
+
+.activity-nav {
+  width: 240px;
+  background: #f8fafc;
+  border-right: 1px solid #e6edf5;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  transition: width 0.25s ease;
+}
+
+.activity-nav.collapsed {
+  width: 64px;
+}
+
+.activity-nav-header {
+  height: 52px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+  border-bottom: 1px solid #e6edf5;
+}
+
+.activity-nav-header button {
+  border: none;
+  background: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.activity-nav-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.activity-nav-list li {
+  padding: 10px 12px;
+  border-radius: 0px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #5a6b85;
+  transition: 0.2s;
+}
+
+.activity-nav-list li:hover {
+  background: #e9f9fb;
+}
+
+.activity-nav-list li.active {
+  background: #00c3d0;
+  color: white;
+  font-weight: 600;
+}
+
+.activity-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* collapsed indicator */
+.activity-nav.collapsed .activity-title {
+  display: none;
+}
+
+.activity-nav.collapsed .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  margin: auto;
+}
+
+/* ===============================
+   BREADCRUMB
+================================ */
+.workspace-breadcrumb {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  height: 44px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border-bottom: 1px solid #eef2f7;
+}
+
+/* HIDE IN FULLSCREEN */
+body.fullscreen-active .workspace-breadcrumb {
+  display: none !important;
+}
+
+.workspace-breadcrumb strong {
+  color: #052143;
+}
+
+.workspace-layout.fullscreen .workspace-breadcrumb {
+  display: none;
+}
+/* ===============================
+   FULLSCREEN OVERRIDES
+================================ */
+
+
+/* === FORCE GRID BEHAVIOR === */
+
+.workspace-layout {
+  display: grid !important;
+  grid-template-columns: 260px 1fr;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  transition: grid-template-columns 0.25s ease;
+}
+
+/* Sidebar collapsed → activity expands */
+.workspace-layout.nav-collapsed {
+  grid-template-columns: 64px 1fr;
+}
+
+/* Fullscreen → only activity */
+body.fullscreen-active .workspace-layout {
+  grid-template-columns: 1fr !important;
+}
+
+.workspace-layout.fullscreen .activity-nav {
+  display: none !important;
+}
+
+
+.topic-activity-nav {
+  width: 260px;
+  min-width: 260px;
+  max-width: 260px;
+  background: #f8fafc;
+  border-right: 1px solid #e5eaf1;
+  overflow-y: auto;
+  transition: width 0.25s ease;
+}
+
+/* COLLAPSED SIDEBAR */
+.topic-activity-nav.collapsed {
+  width: 64px;
+  min-width: 64px;
+  max-width: 64px;
+}
+
+/* HIDE TEXT WHEN COLLAPSED */
+.topic-activity-nav.collapsed .activity-title {
+  display: none !important;
+}
+
+/* CENTER ICON / DOT */
+.topic-activity-nav.collapsed li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.topic-activity-nav.collapsed .dot {
+  display: block;
+}
+
+.workspace-layout.fullscreen .topic-activity-nav {
+  display: none;
+}
+/* Hide activity titles when collapsed */
+.topic-activity-nav.collapsed .activity-title {
+  display: none !important;
+}
+
+/* Center dots/icons */
+.topic-activity-nav.collapsed li {
+  display: flex;
+  justify-content: center;
+}
+
+/* Prevent overflow text */
+.topic-activity-nav {
+  overflow-x: hidden;
+}
+
+
+
+/* Hide completely in fullscreen */
+body.workspace-active .topic-activity-nav.hidden {
+  display: none;
+}
+/* Make workspace UI sharp (DeepLearning-style) */
+.activity-shell,
+.activity-body,
+.activity-footer,
+.workspace-layout,
+.workspace-breadcrumb,
+.topic-activity-nav {
+  border-radius: 0 !important;
+}
+.activity-footer {
+  position: sticky;
+  bottom: 0;
+  background: white;
+  border-top: 1px solid #e5eaf1;
+  z-index: 10;
+}
+/* Hide navbar logo inside workspace */
+
+
+/* Workspace logo visible ONLY when NOT fullscreen */
+body.fullscreen-active .workspace-logo {
+  display: none !important;
+}
+.activity-icon {
+  font-size: 18px;
+  min-width: 24px;
+  text-align: center;
+}
+.collapse-btn {
+  height: 44px;
+  width: 44px;
+  border-radius: 8px;
+  border: none;
+  background: #e6faff;
+  color: #007c8a;
+  font-size: 18px;
+  cursor: pointer;
+}
+.fullscreen-fab {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  height: 48px;
+  width: 48px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.75);
+  color: white;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 20;
+}

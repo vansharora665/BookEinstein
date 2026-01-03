@@ -1,141 +1,174 @@
+/* ===============================
+   WHY CHOOSE US
+================================ */
+
 .why {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 80px;
-  padding: 100px 80px;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 10px;
+  padding: 0px 80px;
 }
 
-.why-tag {
-  color: #35c6cf;
-  font-style: italic;
-}
+/* ---------- LEFT ---------- */
 
 .why-left h2 {
-  font-size: 42px;
-  margin: 16px 0;
+  font-size: 44px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #052143;
+  margin-bottom: 18px;
 }
 
 .why-left h2 span {
   background: #ff9f1c;
-  color: #fff;
-  padding: 2px 10px;
-  border-radius: 16px;
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 38px;
 }
 
-.why-left p {
-  max-width: 520px;
+.why-desc {
+  max-width: 540px;
+  font-size: 16px;
   line-height: 1.7;
   color: #5a6b85;
+  padding-top: 20px;
 }
+
+/* ---------- JOIN CARD ---------- */
 
 .why-join {
-  margin-top: 40px;
+  margin-top: 48px;
   background: #fff4d6;
-  border-radius: 24px;
-  padding: 36px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+  border-radius: 28px;
+  padding: 36px 42px; /* reduced */
   position: relative;
-  overflow: visible;
-}
-
-.why-join img {
-  height: 300px;
-  flex-shrink: 0;
-  position: absolute;
-  left: 360px;
-  bottom: 3px;
 }
 
 .why-join-text h3 {
-  font-size: 28px;
-  font-weight: 600;
+  font-size: 30px;
+  font-weight: 700;
   color: #ff9f1c;
+  margin-bottom: 12px;
+}
+
+.join-sub {
+  font-size: 16px;
+  line-height: 1.65;
+  color: #6b7a90;
+  max-width: 440px;
   margin-bottom: 10px;
 }
 
-.why-join-text p {
-  font-size: 16px;
-  line-height: 1.7;
-  color: #6b7a90;
-  max-width: 420px;
+.join-meta {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ff9f1c;
 }
 
 .join-img {
-    position: absolute;
-    height: 100px;
+  position: absolute;
+  height: 260px;
+  right: -40px;
+  bottom: -6px;
 }
+
+/* ---------- RIGHT ---------- */
 
 .why-right {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 30px;
-  align-items: start;
+  column-gap: 90px;
+  row-gap: 20px;
 }
 
-/* ladder offsets */
-.why-card:nth-child(1) {
-  margin-top: 0;
+/* ---------- LADDER ITEMS ---------- */
+
+.why-item {
+  display: flex;
+  gap: 16px;
+  max-width: 420px;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: transform 0.8s cubic-bezier(0.22,1,0.36,1), opacity 0.6s ease;
 }
 
-.why-card:nth-child(2) {
-  margin-top: 60px;
+.why-item.ladder-visible {
+  opacity: 1;
 }
 
-.why-card:nth-child(3) {
-  margin-top: -20px;
+/* ---------- ICON ---------- */
+
+.why-icon img {
+  width: 30px;   /* reduced */
+  height: 30px;
+  padding: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow:
+    0 12px 28px rgba(0,0,0,0.08),
+    inset 0 0 0 6px rgba(255,255,255,0.65);
 }
 
-.why-card:nth-child(4) {
-  margin-top: 40px;
+/* Individual gradient colors */
+.ladder-1 .why-icon img {
+  background: radial-gradient(circle at top left, #d6c8ff, #a99bff);
 }
 
-
-.why-card {
-  background: #fff;
-  padding: 30px;
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+.ladder-2 .why-icon img {
+  background: radial-gradient(circle at top left, #ffd9a8, #ffb454);
 }
 
-.why-card {
-  background: #ffffff;
-  padding: 32px;
-  border-radius: 24px;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.05);
+.ladder-3 .why-icon img {
+  background: radial-gradient(circle at top left, #ffd1e8, #ff8ec2);
 }
 
-.why-card h4 {
+.ladder-4 .why-icon img {
+  background: radial-gradient(circle at top left, #c9f5d9, #6ddfa3);
+}
+
+/* ---------- TEXT ---------- */
+
+.why-item h4 {
   font-size: 18px;
-  font-weight: 600;
-  margin: 14px 0 8px;
+  font-weight: 700;
   color: #052143;
 }
 
-.why-card p {
-  font-size: 14px;
-  line-height: 1.6;
+.why-item p {
+  font-size: 15px;
+  line-height: 1.65;
   color: #6b7a90;
 }
 
+/* ---------- LADDER OFFSETS ---------- */
+
+.ladder-1 { transform: translateY(60); }
+.ladder-2 { transform: translateY(140px); }
+.ladder-3 { transform: translateY(-20px); }
+.ladder-4 { transform: translateY(100px); }
+
+/* ---------- MOBILE ---------- */
+
 @media (max-width: 900px) {
+  .why {
+    grid-template-columns: 1fr;
+    gap: 70px;
+  }
+
   .why-right {
     grid-template-columns: 1fr;
   }
 
-  .why-card {
-    margin-top: 0 !important;
+  .why-item {
+    transform: none !important;
+    opacity: 1;
   }
 
-  .why-join {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .why-join img {
-    height: 180px;
+  .join-img {
+    position: relative;
+    height: 200px;
+    margin-top: 18px;
+    right: auto;
   }
 }

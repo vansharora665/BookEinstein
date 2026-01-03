@@ -1,6 +1,6 @@
 /* SIDEBAR BASE */
 .sidebar {
-  width: 260px;
+  width: 200px;
   min-height: 100vh;
   background: #ffffff;
   border-right: 1px solid #eef2f7;
@@ -8,11 +8,12 @@
   flex-direction: column;
   padding: 20px 14px;
   transition: width 0.25s ease;
+  overflow: hidden;
 }
 
 /* COLLAPSED */
 .sidebar.collapsed {
-  width: 80px;
+  width: 45px;
 }
 
 /* LOGO / TOGGLE */
@@ -24,7 +25,7 @@
   font-size: 22px;
   background: #fff4e6;
   border: none;
-  border-radius: 12px;
+  border-radius: 0px;
   padding: 10px;
   cursor: pointer;
 }
@@ -60,7 +61,7 @@
   align-items: center;
   gap: 12px;
   padding: 10px 14px;
-  border-radius: 14px;
+  border-radius: 0px;
   font-size: 15px;
   color: #4b5563;
   cursor: pointer;
@@ -88,6 +89,17 @@
   color: #ff8a00;
   font-weight: 600;
 }
+.sidebar-nav a.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 4px;
+  background: #ff8a00;
+  border-radius: 0px;
+}
+
 
 /* COLLAPSED STATE */
 .sidebar.collapsed .sidebar-text,

@@ -62,7 +62,7 @@ function splitListCell(val) {
     .filter(Boolean);
 }
 
-function detectActivityType(item) {
+function detectActivityType(item, titleOverride) {
   if (typeof item === "object" && item?.type) return item;
   if (typeof item !== "string") return null;
 
@@ -70,73 +70,45 @@ function detectActivityType(item) {
   const v = raw.toLowerCase();
   const id = `${hashStringToInt(raw)}-${v}`;
 
+  const title =
+    titleOverride ||
+    (v === "quiz" ? "Quiz" :
+     v === "aiornot" ? "AI or Not" :
+     "Activity");
+
   if (v === "quiz") {
-    return { id, type: "quiz", title: "Quiz" };
+    return { id, type: "quiz", title };
   }
 
   if (v === "aiornot") {
-    return { type: "game", game: "AiOrNot" };
+    return { id, type: "game", game: "AiOrNot", title };
   }
 
   if (v.match(/\.(mp3|wav|ogg)$/)) {
-    return { id, type: "audio", title: "Audio", src: raw };
+    return { id, type: "audio", title, src: raw };
   }
 
   if (raw.includes("drive.google.com")) {
     return {
       id,
       type: "video",
-      title: "Video",
+      title,
       src: convertGoogleDriveLink(raw, "video"),
     };
   }
 
   if (v.match(/\.(png|jpg|jpeg|gif|webp)$/)) {
-    return { id, type: "image", title: "Image", src: raw };
+    return { id, type: "image", title, src: raw };
   }
 
-  return { id, type: "iframe", title: "Interactive", src: raw };
-
-
-
-  // AUDIO
-  if (v.match(/\.(mp3|wav|ogg)$/)) {
-    return {
-      id,
-      type: "audio",
-      title: "Audio",
-      src: raw,
-    };
-  }
-
-  // GOOGLE DRIVE VIDEO
-  if (raw.includes("drive.google.com")) {
-    return {
-      id,
-      type: "video",
-      title: "Video",
-      src: convertGoogleDriveLink(raw, "video"),
-    };
-  }
-
-  // IMAGE
-  if (v.match(/\.(png|jpg|jpeg|gif|webp)$/)) {
-    return {
-      id,
-      type: "image",
-      title: "Image",
-      src: raw,
-    };
-  }
-
-  // DEFAULT → iframe (games, tools, vercel apps, etc.)
   return {
     id,
     type: "iframe",
-    title: "Interactive",
+    title,
     src: raw,
   };
 }
+
 
 function parseAIDetection(cell) {
   if (!cell) return null;
@@ -168,7 +140,7 @@ function parseAIDetection(cell) {
 
 
 
-export function mapRowsToModules(rows) {
+export function mapRowsToModules(rows, courseTitle = "Course") {
   if (!Array.isArray(rows) || rows.length === 0) return [];
 
   
@@ -186,6 +158,11 @@ export function mapRowsToModules(rows) {
     const kTopicContent = getKey(row, ["topicDescription"]);
     const kTopicImage = getKey(row, ["topicImage"]);
     const kActivity = getKey(row, ["activity", "activityContent"]);
+    const kActivityTitle = getKey(row, [
+  "activityTitle",
+  "Activity Title",
+  "activityname",
+]);
 
     const kQuizQuestion = getKey(row, ["quizQuestion"]);
     const kQuizOptionA = getKey(row, ["quizOptionA"]);
@@ -199,7 +176,7 @@ export function mapRowsToModules(rows) {
 
     if (!modulesMap[moduleId]) {
       modulesMap[moduleId] = {
-        id: moduleId,
+        id: moduleId,courseTitle,
         title: row[kModuleTitle] || moduleId,
         desc: row[kModuleDesc] || "",
         level: row[kModuleLevel] || "Beginner",
@@ -213,7 +190,7 @@ export function mapRowsToModules(rows) {
         quiz: [],
       };
     }
-
+    
     const mod = modulesMap[moduleId];
     const topicTitle = row[kTopicTitle]?.toString().trim();
     if (!topicTitle) return;
@@ -241,21 +218,25 @@ if (!Array.isArray(mod.activities[index])) {
 }
 
 if (kActivity && row[kActivity]) {
-  const parsedActivities = splitListCell(row[kActivity])
-    .map(detectActivityType)
-    .filter(Boolean);
+  const activityItems = splitListCell(row[kActivity]);
+const activityTitles = kActivityTitle
+  ? splitListCell(row[kActivityTitle])
+  : [];
 
-  parsedActivities.forEach((act) => {
-    const exists = mod.activities[index].some(
-      (a) =>
-        a.type === act.type &&
-        (a.src || "") === (act.src || "")
-    );
+activityItems.forEach((item, idx) => {
+  const titleOverride = activityTitles[idx];
+  const act = detectActivityType(item, titleOverride);
+  if (!act) return;
 
-    if (!exists) {
-      mod.activities[index].push(act);
-    }
-  });
+  const exists = mod.activities[index].some(
+    (a) => a.type === act.type && (a.src || "") === (act.src || "")
+  );
+
+  if (!exists) {
+    mod.activities[index].push(act);
+  }
+});
+
 }
 
 

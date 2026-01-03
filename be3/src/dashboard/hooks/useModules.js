@@ -3,18 +3,26 @@ import { fetchSheet } from "../../utils/fetchSheet";
 import { mapRowsToModules } from "../../utils/mapSheetToModules";
 
 export function useModules() {
-  const [modules, setModules] = useState(null); // 🔑 null = not loaded yet
+  const [modules, setModules] = useState(null); // null = loading
 
   useEffect(() => {
     async function loadModules() {
       try {
-        console.log("📥 Fetching Excel sheet…");
-
         const rows = await fetchSheet();
-        console.log("📄 Rows fetched:", rows.length);
+
+        if (!Array.isArray(rows)) {
+          console.error("❌ Sheet rows is not an array", rows);
+          setModules([]);
+          return;
+        }
 
         const mapped = mapRowsToModules(rows);
-        console.log("📦 Modules mapped:", mapped.length);
+
+        if (!Array.isArray(mapped)) {
+          console.error("❌ mapRowsToModules did not return array", mapped);
+          setModules([]);
+          return;
+        }
 
         setModules(mapped);
       } catch (err) {
