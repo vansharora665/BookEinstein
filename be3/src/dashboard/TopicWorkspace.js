@@ -150,9 +150,8 @@ const activityTitle = current?.title;
   className="fullscreen-fab"
   onClick={() => setFullscreen(!fullscreen)}
 >
-  ⛶
+  {fullscreen ? "⤢ " : "⛶ "}
 </button>
-
           {!fullscreen && (
   <div className="workspace-breadcrumb">
     <span>{courseTitle}</span>
@@ -242,6 +241,14 @@ const activityTitle = current?.title;
             <div className="activity-footer-left">
               <button className="back-btn" onClick={onExit}>
                 ← Back to Topics
+              </button>
+
+              <button
+                className="prev-btn"
+                disabled={step === 0}
+                onClick={() => setStep(step - 1)}
+              >
+                ← Previous
               </button>
             </div>
 

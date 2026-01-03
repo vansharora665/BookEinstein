@@ -691,16 +691,60 @@ body.fullscreen-active .workspace-logo {
   cursor: pointer;
 }
 .fullscreen-fab {
-  position: absolute;
+  position: fixed;               /* 🔑 stays visible always */
   bottom: 24px;
   right: 24px;
+
   height: 48px;
   width: 48px;
   border-radius: 50%;
-  background: rgba(0,0,0,0.75);
-  color: white;
+
+  background: rgba(0, 0, 0, 0.75);
+  color: #ffffff;
   border: none;
+
   font-size: 18px;
+  line-height: 1;
   cursor: pointer;
-  z-index: 20;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 200000;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+
+  transition: 
+    background 0.2s ease,
+    transform 0.15s ease,
+    opacity 0.2s ease;
 }
+
+/* Hover */
+.fullscreen-fab:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: scale(1.06);
+}
+
+/* Active (click feedback) */
+.fullscreen-fab:active {
+  transform: scale(0.95);
+}
+
+/* Keyboard accessibility */
+.fullscreen-fab:focus-visible {
+  outline: 2px solid #00c3d0;
+  outline-offset: 3px;
+}
+
+/* Mobile safe area */
+@media (max-width: 768px) {
+  .fullscreen-fab {
+    bottom: 16px;
+    right: 16px;
+    height: 44px;
+    width: 44px;
+    font-size: 16px;
+  }
+}
+
