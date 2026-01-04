@@ -104,11 +104,25 @@ const isRoute = (path) => location.pathname === path;
     Dashboard
   </a>
   <a
-    className={activeSection === "home" && location.pathname === "/" ? "active" : ""}
-    onClick={() => navigate("/")}
-  >
-    Home
-  </a>
+  className={
+    location.pathname === "/" && activeSection === "home"
+      ? "active"
+      : ""
+  }
+  onClick={() => {
+    if (location.pathname === "/") {
+      document
+        .getElementById("home")
+        ?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      navigate("/", { state: { scrollToHome: true } });
+    }
+  }}
+>
+  Home
+</a>
+
+
 
   
 

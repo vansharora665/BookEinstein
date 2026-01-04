@@ -11,9 +11,7 @@ export default function ModuleDetail({
   return (
     <div className="module-detail">
       {/* ✅ FIXED BACK BUTTON */}
-      <button className="back-btn" onClick={onBack}>
-        ← Back to Modules
-      </button>
+      
 
       {/* MODULE HEADER */}
       <div className="module-header">

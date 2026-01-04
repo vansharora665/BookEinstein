@@ -1,11 +1,11 @@
 import Navbar from "../components/Navbar";
-import Hero from "../components/Hero";
+
 import About from "../components/About";
 import WhyChooseUs from "../components/WhyChooseUs";
 import Courses from "../components/Courses";
 import Pricing from "../components/Pricing";
 import Footer from "../components/Footer";
-
+import Hero from "../components/Hero";
 export default function Home() {
   return (
     <>
