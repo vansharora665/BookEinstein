@@ -69,3 +69,13 @@
 .quiz-end span {
   font-weight: 600;
 }
+.image-loading {
+  height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  border-radius: 16px;
+  font-weight: 600;
+  color: #64748b;
+}

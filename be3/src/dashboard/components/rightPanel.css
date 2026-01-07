@@ -58,6 +58,32 @@
   transform: translateY(-1px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
+.fire-card p {
+  font-style: italic;
+  letter-spacing: 0.2px;
+}
+
+/* Soft animated glow pulse */
+.fire-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 30% 20%,
+    rgba(255, 255, 255, 0.18),
+    transparent 60%
+  );
+  opacity: 0.6;
+  animation: fireGlow 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes fireGlow {
+  0% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+  100% { opacity: 0.4; }
+}
+
 
 /* ================= 📊 LEARNING HOURS ================= */
 

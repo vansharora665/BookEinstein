@@ -161,7 +161,7 @@ export default function Dashboard() {
 <Sidebar navigateTo={navigateTo} activeView={activeView} />
 
       <main className="dashboard-main">
-        {!isInWorkspace && <Topbar />}
+       
 
         {activeView === "dashboard" && !activeModule && (
           <div className="dashboard-grid">

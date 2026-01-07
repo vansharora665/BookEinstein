@@ -32,31 +32,47 @@ export default function ModulesPage({ modules, onSelectModule }) {
 
       {/* GRID */}
       <div className="modules-grid">
-        {modules.map((module) => (
-          <div
-            key={module.id}
-            className="module-card"
-            onClick={() => onSelectModule(module)}
-          >
-            <div className="module-image">
-              {module.image && (
-                <img src={module.image} alt={module.title} />
-              )}
-            </div>
+  {modules.map((module, index) => {
+    const isLocked = index >= 2;
 
-            <div className="module-content">
-              <span className="module-level">{module.level}</span>
-              <h3>{module.title}</h3>
-              <p>{module.desc || "Start learning this module"}</p>
+    return (
+      <div
+        key={module.id}
+        className={`module-card ${isLocked ? "locked" : ""}`}
+        onClick={() => {
+          if (!isLocked) onSelectModule(module);
+        }}
+      >
+        {/* IMAGE */}
+        <div className="module-image">
+          {module.image && (
+            <img src={module.image} alt={module.title} />
+          )}
 
-              <div className="module-meta">
-                <span>{module.topics.length} Topics</span>
-                <span className="arrow">→</span>
-              </div>
+          {/* 🔒 LOCK OVERLAY */}
+          {isLocked && (
+            <div className="module-lock-overlay">
+              <span className="lock-icon">🔒</span>
             </div>
+          )}
+        </div>
+
+        {/* CONTENT */}
+        <div className="module-content">
+          <span className="module-level">{module.level}</span>
+          <h3>{module.title}</h3>
+          <p>{module.desc || "Start learning this module"}</p>
+
+          <div className="module-meta">
+            <span>{module.topics.length} Topics</span>
+            <span className="arrow">→</span>
           </div>
-        ))}
+        </div>
       </div>
+    );
+  })}
+</div>
+
     </div>
   );
 }

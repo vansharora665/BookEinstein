@@ -87,6 +87,14 @@ export default function ProfessionalQuiz({
 useEffect(() => {
   bgMusic.current.muted = muted;
 }, [muted]);
+useEffect(() => {
+  return () => {
+    try {
+      bgMusic.current.pause();
+      bgMusic.current.currentTime = 0;
+    } catch {}
+  };
+}, []);
 
   /* ---------------- TIMER ---------------- */
   useEffect(() => {
@@ -112,28 +120,25 @@ useEffect(() => {
     if (!audioUnlocked) {
   setAudioUnlocked(true);
   if (!muted) {
-    bgMusic.current.currentTime = 0;
-    bgMusic.current.play().catch(() => {});
+    try {
+      bgMusic.current.currentTime = 0;
+      bgMusic.current.play().catch(() => {});
+    } catch {}
   }
 }
 
-    const q = quizList[index];
-    if (!q || answers[q.id]) return;
 
-    // 🔑 unlock audio on first interaction
-    if (!audioUnlocked) setAudioUnlocked(true);
+    const correct = current.type === "mcq" ? given === current.answer : false;
 
-    const correct = q.type === "mcq" ? given === q.answer : false;
-
-    setAnswers(s => ({ ...s, [q.id]: { given, correct, timedOut } }));
+    setAnswers(s => ({ ...s, [current.id]: { given, correct, timedOut } }));
 
     if (correct) {
       setScore(s => s + 1);
       play(audioCorrect);
-      setShowFeedback({ type: "correct", text: q.correctFeedback });
+      setShowFeedback({ type: "correct", text: current.correctFeedback });
     } else {
       play(audioWrong);
-      setShowFeedback({ type: "incorrect", text: q.incorrectFeedback });
+      setShowFeedback({ type: "incorrect", text: current.incorrectFeedback });
     }
 
     setTimeout(() => {
@@ -144,101 +149,119 @@ useEffect(() => {
 
   /* ---------------- FINISH ---------------- */
   function finishQuiz() {
-    play(audioApplause);
-    try {
-  bgMusic.current.pause();
-} catch {}
+  try {
+    bgMusic.current.pause();
+    bgMusic.current.currentTime = 0;
+  } catch {}
 
-    setShowResult(true);
-    onComplete?.({ score, total: quizList.length, details: answers });
-  }
+  play(audioApplause);
+
+  setShowResult(true);
+  onComplete?.({ score, total: quizList.length, details: answers });
+}
+
 
   /* ---------------- UI ---------------- */
   const current = quizList[index];
   const progress = Math.round((index / quizList.length) * 100);
 
   return (
+  <div className="quiz-desktop">
     <div className="quiz-root">
-      {/* FEEDBACK */}
-      <AnimatePresence>
-        {showFeedback && (
-          <motion.div
-            className={`quiz-feedback ${showFeedback.type}`}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-          >
-            {showFeedback.text}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      
 
       <div className="quiz-card">
-        <div className="quiz-header">
-          <span>Question {index + 1}/{quizList.length}</span>
-          <div className="quiz-header-right">
-            <span className="quiz-score">{score}</span>
-            <button
-              className="quiz-mute-btn"
-              onClick={() => setMuted(m => !m)}
-            >
-              {muted ? "🔇" : "🔊"}
-            </button>
-          </div>
-        </div>
-
-        <div className="quiz-progress">
-          <div style={{ width: `${progress}%` }} />
-        </div>
-
-        {current && (
+        {!showResult ? (
           <>
-            <h2 className="quiz-question">{current.q}</h2>
+            <div className="quiz-header">
+              <span>Question {index + 1}/{quizList.length}</span>
+              <div className="quiz-header-right">
+                <span className="quiz-score">Score: {score}</span>
+                <button className="quiz-mute-btn" onClick={() => setMuted(m => !m)}>
+                  {muted ? "🔇" : "🔊"}
+                </button>
+              </div>
+            </div>
 
-            <div className="quiz-options">
-              {current.options.map((opt, i) => {
-                const ans = answers[current.id];
-                const correct = ans && i === current.answer;
-                const wrong = ans && ans.given === i && !ans.correct;
+            <div className="quiz-progress">
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }} 
+              />
+            </div>
 
-                return (
-                  <button
-                    key={i}
-                    disabled={ans}
-                    onClick={() => handleAnswer(i)}
-                    className={`quiz-option ${correct ? "correct" : wrong ? "incorrect" : ""}`}
-                  >
-                    {opt}
+            {current && (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+              >
+                <h2 className="quiz-question">{current.q}</h2>
+                <div className="quiz-options">
+                  {current.options.map((opt, i) => {
+                    const ans = answers[current.id];
+                    const isCorrect = ans && i === current.answer;
+                    const isWrong = ans && ans.given === i && !ans.correct;
+
+                    return (
+                      <button
+                        key={i}
+                        disabled={ans}
+                        onClick={() => handleAnswer(i)}
+                        className={`quiz-option ${isCorrect ? "correct" : isWrong ? "incorrect" : ""}`}
+                      >
+                        {opt}
+                      </button>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )}
+            <div className="quiz-feedback-container">
+    <AnimatePresence>
+      {showFeedback && (
+        <motion.div
+          className={`quiz-feedback ${showFeedback.type}`}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          {showFeedback.text}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  </div>
+
+            <div className="quiz-footer">
+              <span className="quiz-timer">⏱ {timer}s</span>
+              {index === quizList.length - 1 && answers[current.id] && (
+                <div className="quiz-finish-wrapper">
+                  <button className="quiz-finish-btn" onClick={finishQuiz}>
+                    See Results
                   </button>
-                );
-              })}
+                </div>
+              )}
             </div>
           </>
+        ) : (
+          /* RESULT VIEW INSIDE CARD */
+          <motion.div 
+            className="quiz-result"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+          >
+            <h1 style={{ fontSize: '48px' }}>🎉</h1>
+            <h2>Quiz Completed!</h2>
+            <div className="quiz-score-display" style={{ fontSize: '24px', margin: '20px 0', color: '#00c3d0', fontWeight: '800' }}>
+              Final Score: {score} / {quizList.length}
+            </div>
+            <button className="quiz-finish-btn" onClick={() => window.location.reload()}>
+              Try Again
+            </button>
+          </motion.div>
         )}
-
-        {/* FOOTER CONTROLS */}
-        <div className="quiz-footer">
-          <span className="quiz-timer">{timer}s</span>
-
-          {/* 🔥 NEW FINISH BUTTON */}
-          <div className="quiz-finish-wrapper">
-  <button
-    className="quiz-finish-btn"
-    onClick={finishQuiz}
-  >
-    Finish Quiz
-  </button>
-</div>
-
-        </div>
       </div>
-
-      {showResult && (
-        <div className="quiz-result">
-          <h2>Quiz Completed 🎉</h2>
-          <p>Score: {score}/{quizList.length}</p>
-        </div>
-      )}
     </div>
-  );
+  </div>
+);
 }

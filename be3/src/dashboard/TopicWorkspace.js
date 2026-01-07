@@ -4,6 +4,9 @@ import "./learning.css";
 import AIDetectionQuiz from "../components/activities/AIDetectionQuiz";
 import AiOrNotGame from "../games/AiOrNot";
 import TopicActivityNav from "./TopicActivityNav";
+import TopicSurvey from "./TopicSurvey";
+import ModuleSurvey from "./ModuleSurvey";
+
 
 export default function TopicWorkspace({
   module,
@@ -13,6 +16,9 @@ export default function TopicWorkspace({
   /* ===============================
      STATE
   =============================== */
+  const [showTopicSurvey, setShowTopicSurvey] = useState(false);
+const [showModuleSurvey, setShowModuleSurvey] = useState(false);
+
   const [step, setStep] = useState(0);
   const [fullscreen, setFullscreen] = useState(false);
   const [navCollapsed, setNavCollapsed] = useState(false);
@@ -21,6 +27,7 @@ export default function TopicWorkspace({
   document.body.classList.toggle("fullscreen-active", fullscreen);
   return () => document.body.classList.remove("fullscreen-active");
 }, [fullscreen]);
+
 
 
 
@@ -92,6 +99,8 @@ const moduleTitle = module.title;
 const topicTitle = module.topics?.[topicIndex];
 const activityTitle = current?.title;
 
+const isLastActivity = step === blocks.length - 1;
+const isLastTopic = topicIndex === module.topics.length - 1;
 
   /* ===============================
      QUIZ DATA
@@ -113,6 +122,7 @@ const activityTitle = current?.title;
     );
   }
   
+
 
   /* ===============================
      RENDER
@@ -166,6 +176,28 @@ const activityTitle = current?.title;
 
           {/* BODY */}
           <div className="activity-body" ref={bodyRef}>
+            {showTopicSurvey && (
+  <TopicSurvey
+    onSubmit={() => {
+      setShowTopicSurvey(false);
+      if (isLastTopic) {
+        setShowModuleSurvey(true);
+      } else {
+        onExit(); // go back to topics list
+      }
+    }}
+  />
+)}
+
+{showModuleSurvey && (
+  <ModuleSurvey
+    onSubmit={() => {
+      setShowModuleSurvey(false);
+      onExit(); // or dashboard
+    }}
+  />
+)}
+
             {current.type === "audio" && (
               <audio controls style={{ width: "100%" }}>
                 <source src={current.src} />
@@ -253,37 +285,43 @@ const activityTitle = current?.title;
             </div>
 
             <div className="activity-footer-right">
-              {step < blocks.length - 1 ? (
-                <button
-                  className="next-btn"
-                  onClick={() => {
-                    const increment = Math.round(100 / blocks.length);
-                    window.updateTopicProgress?.(
-                      module.id,
-                      topicIndex,
-                      increment
-                    );
-                    setStep(step + 1);
-                  }}
-                >
-                  Next →
-                </button>
-              ) : (
-                <button
-                  className="complete-btn"
-                  onClick={() => {
-                    window.updateTopicProgress?.(
-                      module.id,
-                      topicIndex,
-                      100
-                    );
-                    onExit();
-                  }}
-                >
-                  Mark Topic Complete
-                </button>
-              )}
-            </div>
+  {step < blocks.length - 1 ? (
+    <button
+      className="next-btn"
+      onClick={() => {
+        const increment = Math.round(100 / blocks.length);
+
+        window.updateTopicProgress?.(
+          module.id,
+          topicIndex,
+          increment
+        );
+
+        setStep(step + 1);
+      }}
+    >
+      Next →
+    </button>
+  ) : (
+    <button
+      className="complete-btn"
+      onClick={() => {
+        // mark topic as fully completed
+        window.updateTopicProgress?.(
+          module.id,
+          topicIndex,
+          100
+        );
+
+        // 🔑 SHOW TOPIC SURVEY instead of exiting
+        setShowTopicSurvey(true);
+      }}
+    >
+      Complete Topic →
+    </button>
+  )}
+</div>
+
           </div>
         </div>
       </div>

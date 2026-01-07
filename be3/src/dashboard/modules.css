@@ -177,3 +177,42 @@
     grid-template-columns: 1fr;
   }
 }
+/* ===============================
+   LOCKED MODULE CARD
+================================ */
+
+.module-card.locked {
+  cursor: not-allowed;
+  pointer-events: auto;
+}
+
+/* Dim entire card */
+.module-card.locked {
+  opacity: 0.6;
+}
+
+/* IMAGE OVERLAY */
+.module-lock-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  border-radius: inherit;
+}
+
+/* LOCK ICON */
+.lock-icon {
+  font-size: 32px;
+  background: transparent;
+  border-radius: 50%;
+  padding: 10px 12px;
+}
+
+/* Prevent hover effects */
+.module-card.locked:hover {
+  transform: none;
+  box-shadow: none;
+}

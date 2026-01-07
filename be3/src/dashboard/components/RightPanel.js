@@ -7,8 +7,7 @@ export default function RightPanel() {
   return (
     <aside className="right-panel">
       <FireCard />
-      <LearningHours />
-      <Leaderboard />
+            <Leaderboard />
     </aside>
   );
 }

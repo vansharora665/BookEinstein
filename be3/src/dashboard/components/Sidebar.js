@@ -49,21 +49,7 @@ export default function Sidebar({ navigateTo, activeView }) {
             onClick={() => handleClick("modules")}
           />
 
-          <SidebarItem
-            icon="🔍"
-            label="Browse Courses"
-            active={activeView === "browse"}
-            collapsed={collapsed}
-            onClick={() => handleClick("browse")}
-          />
-
-          <SidebarItem
-            icon="📝"
-            label="Quizzes & Scores"
-            active={activeView === "quizzes"}
-            collapsed={collapsed}
-            onClick={() => handleClick("quizzes")}
-          />
+  
 
           <SidebarItem
             icon="🏆"
@@ -73,45 +59,11 @@ export default function Sidebar({ navigateTo, activeView }) {
             onClick={() => handleClick("achievements")}
           />
 
-          <SidebarItem
-            icon="📊"
-            label="Leaderboard"
-            active={activeView === "leaderboard"}
-            collapsed={collapsed}
-            onClick={() => handleClick("leaderboard")}
-          />
-
-          <SidebarItem
-            icon="⚡"
-            label="Activities"
-            active={activeView === "activities"}
-            collapsed={collapsed}
-            onClick={() => handleClick("activities")}
-          />
+          
         </nav>
       </div>
 
-      <div className="sidebar-section bottom">
-        {!collapsed && <p className="sidebar-title">SETTINGS</p>}
-
-        <nav className="sidebar-nav">
-          <SidebarItem
-            icon="⚙️"
-            label="Settings"
-            active={activeView === "settings"}
-            collapsed={collapsed}
-            onClick={() => handleClick("settings")}
-          />
-
-          <SidebarItem
-            icon="❓"
-            label="Help"
-            active={activeView === "help"}
-            collapsed={collapsed}
-            onClick={() => handleClick("help")}
-          />
-        </nav>
-      </div>
+    
     </aside>
   );
 }

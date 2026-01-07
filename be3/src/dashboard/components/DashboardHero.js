@@ -22,14 +22,14 @@ export default function DashboardHero() {
 
           <div className="hero-text">
             <h1>
-              Hello, <span>{firstName}</span>
+              Hello   , <span>{firstName}</span>
             </h1>
             <p>Welcome back</p>
           </div>
         </div>
 
         {/* ACTION BUTTONS (UNCHANGED) */}
-        <div className="hero-actions">
+        {/* <div className="hero-actions">
           <button className="hero-btn primary">
             Resume Course
           </button>
@@ -37,20 +37,23 @@ export default function DashboardHero() {
           <button className="hero-btn outline">
             Explore Courses
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* RIGHT ICON FIELD (UNCHANGED) */}
       <div className="hero-right">
-        {[...Array(8)].map((_, i) => (
-          <img
-            key={i}
-            src={`/dashboard/${i}.png`}
-            alt={`decor-${i}`}
-            className={`hero-icon f${i}`}
-          />
-        ))}
-      </div>
+  <span className="micro-pulse teal p1" />
+  <span className="micro-pulse orange p2" />
+  <span className="micro-pulse blue p3" />
+  <span className="micro-pulse mint p4" />
+  <span className="micro-pulse teal p5" />
+  <span className="micro-pulse orange p6" />
+  <span className="micro-pulse blue p7" />
+  <span className="micro-pulse mint p8" />
+  <span className="micro-pulse teal p9" />
+  <span className="micro-pulse orange p10" />
+</div>
+
     </section>
   );
 }

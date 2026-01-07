@@ -3,7 +3,6 @@ const users = [
   { name: "Username 2", days: 12, score: "1,340", rank: 2 },
   { name: "Username 3", days: 10, score: "1,120", rank: 3 },
   { name: "Username 4", days: 8, score: "980", rank: 4 },
-  { name: "Username 5", days: 7, score: "890", rank: 5 },
 ];
 
 export default function Leaderboard() {

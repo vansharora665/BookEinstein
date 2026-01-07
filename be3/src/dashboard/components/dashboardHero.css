@@ -1,48 +1,53 @@
+/* ================= DASHBOARD HERO (SHRUNK HEADER STYLE) ================= */
+
 .dashboard-hero {
   background: linear-gradient(135deg, #00c3d0, #67d3dc);
-  border-radius: 28px;
-  padding: 48px 56px;
-  margin: 24px;
+  border-radius: 24px;
+  padding: 24px 40px;
+  margin: 0px;
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
+  grid-template-columns: 1fr auto;
   align-items: center;
   position: relative;
   overflow: hidden;
-  min-height: 300px;
+
+  /* 🔽 SHRUNK HEIGHT */
+  min-height: 0px;
 }
 
 /* ================= LEFT CONTENT ================= */
+
 .hero-left {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 14px;
 }
 
 /* AVATAR + TEXT ROW */
 .hero-greeting {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 16px;
 }
 
 /* AVATAR */
 .hero-avatar {
-  width: 150px;
-  height: 150px;
+  width: 164px;
+  height: 164px;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
   background: white;
 }
 
 /* TEXT */
 .hero-text h1 {
-  font-size: 30px;
+  font-size: 49px;
   font-weight: 800;
   color: #ffffff;
-  margin: 0;
-  line-height: 1.1;
+  margin: 10px;
+  line-height: 1.2;
 }
 
 .hero-text h1 span {
@@ -50,38 +55,42 @@
 }
 
 .hero-text p {
-  margin-top: 6px;
-  font-size: 18px;
+  margin-top: 2px;
+  font-size: 34px;
   color: rgba(255, 255, 255, 0.85);
+  margin: 10px;
   font-weight: 500;
 }
 
 /* ================= BUTTONS ================= */
+
 .hero-actions {
   display: flex;
-  gap: 18px;
+  gap: 12px;
 }
 
 .hero-btn {
-  padding: 14px 28px;
+  padding: 10px 20px;
   border-radius: 999px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.25s ease;
 }
 
+/* Primary */
 .hero-btn.primary {
   background: #ffffff;
   color: #00c3d0;
   border: none;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
 .hero-btn.primary:hover {
   transform: translateY(-2px);
 }
 
+/* Outline */
 .hero-btn.outline {
   background: transparent;
   color: #ffffff;
@@ -92,48 +101,225 @@
   background: rgba(255, 255, 255, 0.12);
 }
 
-/* ================= RIGHT ICON FIELD ================= */
+/* ================= RIGHT SIDE ================= */
+/* Disabled intentionally — we will add ONE corner image later */
+
 .hero-right {
-  position: relative;
-  width: 100%;
-  height: 100%;
+  display: flex;
 }
-
-/* ICON BASE */
-.hero-icon {
+.hero-right {
   position: absolute;
-  background: transparent;
-  border-radius: 16px;
+  right: -60px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 220px;
+  height: 220px;
+  pointer-events: none;
 }
 
-/* EXACT SCATTER POSITIONS */
-.f0 { top: 8%; left: 10%; width: 80px; }
-.f1 { top: 22%; left: 42%; width: 46px; }
-.f2 { top: 6%; right: 8%; width: 56px; }
-.f3 { top: 38%; right: 8%; width: 70px; }
-.f4 { bottom: 4%; right: 30%; width: 56px; }
-.f5 { bottom: 10%; left: 38%; width: 56px; }
-.f6 { top: 50%; left: 14%; width: 56px; }
-.f7 { bottom: 20%; right: -23%; width: 40px; }
+/* ================= AI PULSE (RIGHT SIDE) ================= */
+
+/* ================= AI PULSE (COLORED MICRO PULSES) ================= */
+
+/* =====================================================
+   AI AMBIENT PULSE FIELD (RIGHT SIDE HERO)
+===================================================== */
+
+/* Pulse container */
+.hero-right {
+  position: absolute;
+  right: 0;
+  top: 110px;
+  width: 55%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Base pulse */
+.micro-pulse {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.65;
+  animation: floatPulse linear infinite;
+  filter: blur(0.8px);
+}
+
+/* Pulse colors */
+.micro-pulse.teal {
+  background: #00c3d0;
+  box-shadow: 0 0 18px rgba(0, 195, 208, 0.6);
+}
+
+.micro-pulse.orange {
+  background: #ff9f43;
+  box-shadow: 0 0 16px rgba(255, 159, 67, 0.6);
+}
+
+.micro-pulse.blue {
+  background: #4f9cff;
+  box-shadow: 0 0 16px rgba(79, 156, 255, 0.6);
+}
+
+.micro-pulse.mint {
+  background: #5eead4;
+  box-shadow: 0 0 14px rgba(94, 234, 212, 0.6);
+}
+
+/* ================= POSITIONS ================= */
+
+/* upper mid */
+.p1 {
+  width: 14px;
+  height: 14px;
+  top: 18%;
+  left: 62%;
+  animation-duration: 7s;
+}
+
+/* right upper */
+.p2 {
+  width: 10px;
+  height: 10px;
+  top: 32%;
+  left: 78%;
+  animation-duration: 6s;
+}
+
+/* mid */
+.p3 {
+  width: 12px;
+  height: 12px;
+  top: 22%;
+  left: 48%;
+  animation-duration: 8s;
+}
+
+/* center */
+.p4 {
+  width: 16px;
+  height: 16px;
+  top: 45%;
+  left: 65%;
+  animation-duration: 9s;
+}
+
+/* mid lower */
+.p5 {
+  width: 11px;
+  height: 11px;
+  top: 58%;
+  left: 52%;
+  animation-duration: 6.5s;
+}
+
+/* bottom mid */
+.p6 {
+  width: 14px;
+  height: 14px;
+  bottom: 22%;
+  left: 70%;
+  animation-duration: 8.5s;
+}
+
+/* bottom right */
+.p7 {
+  width: 10px;
+  height: 10px;
+  bottom: 18%;
+  left: 84%;
+  animation-duration: 6s;
+}
+
+/* far right center */
+.p8 {
+  width: 12px;
+  height: 12px;
+  top: 50%;
+  left: 92%;
+  animation-duration: 7.5s;
+}
+
+/* subtle extras */
+.p9 {
+  width: 9px;
+  height: 9px;
+  top: 12%;
+  left: 85%;
+  animation-duration: 6.8s;
+}
+
+.p10 {
+  width: 13px;
+  height: 13px;
+  bottom: 10%;
+  left: 58%;
+  animation-duration: 8.2s;
+}
+
+/* ================= ANIMATION ================= */
+
+@keyframes floatPulse {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateY(-10px) scale(1.15);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.55;
+  }
+}
 
 /* ================= RESPONSIVE ================= */
+
+/* Hide pulses on small screens */
+@media (max-width: 1024px) {
+  .hero-right {
+    display: none;
+  }
+}
+
+/* ================= HERO SHRINK (THIN & CLEAN) ================= */
+
+.dashboard-hero {
+  min-height: 180px;       /* 🔥 thinner */
+  padding: 32px 44px;
+  border-radius: 26px;
+}
+
+/* RESPONSIVE – HIDE PULSE ON SMALL SCREENS */
+@media (max-width: 1024px) {
+  .hero-right {
+    display: none;
+  }
+}
+
+
+/* ================= RESPONSIVE ================= */
+
 @media (max-width: 1024px) {
   .dashboard-hero {
     grid-template-columns: 1fr;
-    padding: 36px 28px;
-    text-align: center;
+    padding: 22px 28px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-hero {
+    padding: 20px;
+    margin: 16px;
+    min-height: 120px;
   }
 
   .hero-greeting {
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   .hero-actions {
-    justify-content: center;
     flex-wrap: wrap;
-  }
-
-  .hero-right {
-    display: none;
   }
 }
