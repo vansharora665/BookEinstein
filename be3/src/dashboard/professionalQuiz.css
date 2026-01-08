@@ -182,13 +182,6 @@
   box-shadow: 0 12px 28px rgba(0, 195, 208, 0.4);
 }
 
-/* MOBILE */
-@media (max-width: 768px) {
-  .quiz-finish-btn {
-    width: 100%;
-    max-width: 320px;
-  }
-}
 /* =====================================================
    DESKTOP IMMERSIVE QUIZ MODE
 ===================================================== */
@@ -291,4 +284,91 @@
     font-size: 20px;
     max-width: 80%; /* Keeps it looking clean on wide screens */
   }
+}
+/* =====================================================
+   MOBILE QUIZ OPTIMIZATION (Stacked Mode)
+===================================================== */
+@media (max-width: 768px) {
+  
+  /* Remove the large desktop margins/paddings */
+  .quiz-root {
+    padding: 10px !important;
+    max-width: 100% !important;
+  }
+
+  /* Make the card fit inside the shrunk activity body */
+  .quiz-card {
+    padding-top: 90px !important;
+    min-height: auto !important; /* Kill the 560px height */
+    border-radius: 16px !important;
+    box-shadow: none !important; /* Layout shell handles shadow */
+  }
+
+  /* Header spacing */
+  .quiz-header {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+
+  .quiz-score {
+    font-size: 15px !important;
+  }
+
+  /* Question text sizing */
+  .quiz-question {
+    font-size: 18px !important;
+    margin-bottom: 20px !important;
+    line-height: 1.4;
+  }
+
+  /* OPTIONS - Single column for easy tapping */
+  .quiz-options {
+    grid-template-columns: 1fr !important; 
+    gap: 10px !important;
+  }
+
+  .quiz-option {
+    padding: 14px !important;
+    font-size: 15px !important;
+    border-radius: 12px !important;
+    text-align: left; /* Better for reading on mobile */
+  }
+
+  /* Feedback Container - Shrink height so it doesn't push footer off screen */
+  .quiz-feedback-container {
+    min-height: 60px !important;
+    margin-top: 15px !important;
+  }
+
+  .quiz-feedback {
+    font-size: 14px !important;
+    padding: 12px !important;
+  }
+
+  /* Footer & Finish Button */
+  .quiz-footer {
+    margin-top: 15px;
+  }
+
+  .quiz-finish-wrapper {
+    margin-top: 30px !important; /* Bring it closer to content */
+  }
+
+  .quiz-finish-btn {
+    width: 100% !important;
+    padding: 14px !important;
+    font-size: 15px !important;
+  }
+
+  /* Result Screen */
+  .quiz-result h2 {
+    font-size: 20px !important;
+  }
+}
+
+/* FIX: Ensure the quiz doesn't get cut off in the activity body */
+.activity-body:has(.quiz-root) {
+  height: auto !important;
+  min-height: 400px;
+  background: #ffffff !important; /* White background for quiz */
 }

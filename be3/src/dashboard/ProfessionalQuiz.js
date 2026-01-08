@@ -166,6 +166,7 @@ useEffect(() => {
   const progress = Math.round((index / quizList.length) * 100);
 
   return (
+    <div className="quiz-container-adaptive">
   <div className="quiz-desktop">
     <div className="quiz-root">
       
@@ -262,6 +263,7 @@ useEffect(() => {
         )}
       </div>
     </div>
+  </div>
   </div>
 );
 }

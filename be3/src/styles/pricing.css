@@ -104,16 +104,71 @@
   }
 }
 
-@media (max-width: 640px) {
+/* ===============================
+   CONTACT / CTA — MOBILE OVERHAUL
+================================ */
+
+@media (max-width: 768px) {
   .pricing {
-    padding: 80px 20px;
+    padding: 40px 18px; /* Tighter padding around the card */
+  }
+
+  .contact-cta {
+    grid-template-columns: 1fr; /* Stack vertically */
+    padding: 40px 24px; /* Significantly reduced internal padding */
+    gap: 30px;
+    border-radius: 24px;
+    text-align: left; /* Changed from center to left for better feel */
+  }
+
+  .contact-content {
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .contact-tag {
+    font-size: 12px;
+    padding: 4px 12px;
   }
 
   .contact-content h3 {
-    font-size: 28px;
+    font-size: 28px; /* Scaled down */
+    line-height: 1.2;
+    margin-bottom: 12px;
   }
 
   .contact-content p {
-    font-size: 15px;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  /* --- CONTACT DETAILS TWEAK --- */
+  .contact-details {
+    align-items: flex-start; /* Keep left aligned */
+    gap: 8px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.1); /* Subtle box to group info */
+    padding: 15px;
+    border-radius: 12px;
+  }
+
+  .contact-btn {
+    width: 100%; /* Full width button for thumb-friendly UI */
+    padding: 16px;
+    font-size: 16px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  /* --- RIGHT IMAGE --- */
+  .contact-cta img {
+    width: 100%;
+    max-width: 250px; /* Prevent the image from being too huge */
+    margin: 0 auto; /* Center only the image */
+    display: block;
+    border-radius: 16px;
+    order: 2; /* Ensures image stays below text */
   }
 }

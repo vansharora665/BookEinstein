@@ -275,13 +275,7 @@ const isLastTopic = topicIndex === module.topics.length - 1;
                 ← Back to Topics
               </button>
 
-              <button
-                className="prev-btn"
-                disabled={step === 0}
-                onClick={() => setStep(step - 1)}
-              >
-                ← Previous
-              </button>
+            
             </div>
 
             <div className="activity-footer-right">

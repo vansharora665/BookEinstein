@@ -274,14 +274,7 @@
   }
 }
 
-/* ================= RESPONSIVE ================= */
-
-/* Hide pulses on small screens */
-@media (max-width: 1024px) {
-  .hero-right {
-    display: none;
-  }
-}
+/* =
 
 /* ================= HERO SHRINK (THIN & CLEAN) ================= */
 
@@ -292,34 +285,31 @@
 }
 
 /* RESPONSIVE – HIDE PULSE ON SMALL SCREENS */
-@media (max-width: 1024px) {
-  .hero-right {
-    display: none;
-  }
-}
 
-
-/* ================= RESPONSIVE ================= */
-
-@media (max-width: 1024px) {
-  .dashboard-hero {
-    grid-template-columns: 1fr;
-    padding: 22px 28px;
-  }
-}
 
 @media (max-width: 768px) {
   .dashboard-hero {
-    padding: 20px;
-    margin: 16px;
-    min-height: 120px;
+    padding: 24px 20px;
+    margin: 15px;
+    min-height: auto;
+    border-radius: 20px;
+    text-align: left;
   }
 
-  .hero-greeting {
-    justify-content: flex-start;
+  .hero-avatar {
+    width: 70px; /* Scaled down from 164px */
+    height: 70px;
   }
 
-  .hero-actions {
-    flex-wrap: wrap;
+  .hero-text h1 {
+    font-size: 24px; /* Scaled down from 49px */
+    margin: 0;
   }
+
+  .hero-text p {
+    font-size: 16px; /* Scaled down from 34px */
+    margin: 0;
+  }
+  
+  .hero-right { display: none !important; }
 }

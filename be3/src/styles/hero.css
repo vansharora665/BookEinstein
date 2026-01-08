@@ -163,36 +163,76 @@
   width: 100%;
 }
 
-/* ================= RESPONSIVE ================= */
+/* ================= RESPONSIVE OVERHAUL ================= */
 
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
   .hero-inner {
-    grid-template-columns: 1fr;
-    text-align: center;
+    grid-template-columns: 1fr; 
+    padding: 30px 20px 40px; /* Reduced top/bottom padding */
+    text-align: left; /* Force left alignment */
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Tight spacing between text and image */
   }
 
-  .hero-image {
-    margin-top: 60px;
-  }
-
-  .hero-curve {
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-
-@media (max-width: 640px) {
   .hero-title {
-    font-size: 36px;
+    font-size: 34px; /* Slightly smaller for tighter fit */
+    line-height: 1.1; /* Reduced line height to save space */
+    letter-spacing: -0.5px;
+  }
+
+  /* Hide decorative curve and clutter icons to save vertical space */
+  .hero-curve, .icon.Ai, .icon.like, .hero-wave {
+    display: none;
+  }
+
+  .hero-subtext {
+    font-size: 15px; /* Smaller text */
+    margin-top: 12px; /* Tight spacing */
+    line-height: 1.4;
+    max-width: 100%;
+  }
+
+  .hero-actions {
+    margin-top: 20px;
+  }
+
+  .hero-btn {
+    padding: 12px 28px; /* Slimmer button */
+    font-size: 15px;
+    align-items: center !important;
+    align-self: center !important;
+  }
+
+  /* --- COMPACT IMAGE SECTION --- */
+  .hero-image {
+    margin-top: 10px;
+    justify-content: flex-start; /* Align image to left to match text */
   }
 
   .hero-image-circle {
-    width: 280px;
-    height: 280px;
+    width: 220px; /* Significantly smaller image */
+    height: 200px;
+    margin-top: 0;
+    border-radius: 50%; /* Changed from 50% for a modern square-ish look */
   }
 
-  .hero-success,
-  .icon {
-    display: none;
+  .hero-main-image {
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+  }
+
+  .icon.robot {
+    width: 60px; /* Small robot icon */
+    height: auto;
+    left: auto;
+    right: 10px;
+    bottom: 10px;
+  }
+
+  /* Reduce background opacity so text is clearer on small screens */
+  .hero-bg {
+    opacity: 0.15;
   }
 }

@@ -303,24 +303,7 @@ body.workspace-active .dashboard-main {
    MOBILE OPTIMISATION
 ===================================================== */
 
-@media (max-width: 768px) {
-  .module-detail {
-    padding: 20px;
-  }
 
-  .topic-card {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .activity-footer {
-    height: 56px;
-    padding: 0 16px;
-    flex-wrap: wrap;
-    display: flex;
-  }
-}
 /* LOCKED STATE */
 .topic-card.locked {
   opacity: 0.55;
@@ -394,19 +377,7 @@ body.workspace-active .dashboard-main {
 .complete-btn {
   position: static !important;
 }
-@media (max-width: 640px) {
-  .activity-footer {
-    flex-direction: column;
-    height: auto;
-    gap: 12px;
-  }
 
-  .activity-footer-left,
-  .activity-footer-right {
-    width: 100%;
-    justify-content: space-between;
-  }
-}
 /* =====================================================
    FULLSCREEN LOGO (AUTHENTICITY)
 ===================================================== */
@@ -437,17 +408,7 @@ body.workspace-active .sidebar {
   opacity: 0;
   pointer-events: none;
 } */
-/* Mobile adjustments */
-@media (max-width: 768px) {
-  .workspace-logo {
-    top: 10px;
-    left: 12px;
-  }
 
-  .workspace-logo img {
-    height: 28px;
-  }
-}
 
 
 
@@ -793,13 +754,221 @@ body.fullscreen-active .workspace-logo {
 }
 
 /* Mobile safe area */
+/* =====================================================
+   MODULE DETAIL - MOBILE FIX (REFINED)
+===================================================== */
 @media (max-width: 768px) {
-  .fullscreen-fab {
-    bottom: 16px;
-    right: 16px;
-    height: 44px;
-    width: 44px;
-    font-size: 16px;
+  /* 1. Module Page Container */
+  .module-detail {
+    padding: 16px;
+    background: #fcfdfe; /* Subtle background change to differentiate from cards */
   }
+
+  /* 2. Banner/Header - Forced Left Align */
+  .module-header {
+    flex-direction: column;
+    align-items: flex-start; /* 🔑 Text stays left */
+    text-align: left;        /* 🔑 Text stays left */
+    gap: 16px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f1f5f9; /* Visual separator */
+  }
+
+  .module-cover {
+    width: 100%;
+    height: 180px;
+    border-radius: 16px;
+    object-fit: cover;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  }
+
+  .module-header h1 {
+    font-size: 24px;
+    font-weight: 800;
+    color: #052143;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .module-header p {
+    font-size: 14px;
+    color: #64748b;
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  /* 3. Section Divider Title (Helps identify Topic List) */
+  .topics-list::before {
+    content: "Course Topics"; /* Labels the list */
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #94a3b8;
+    margin-bottom: 15px;
+  }
+
+  /* 4. Topic Cards */
+  .topic-card {
+    grid-template-columns: 70px 1fr; /* Image beside text */
+    grid-template-areas: 
+      "thumb text"
+      "action action"; /* Progress/Action spans full width below */
+    gap: 12px;
+    padding: 14px;
+    border-radius: 18px;
+    text-align: left;
+    align-items: center;
+  }
+
+  .topic-thumb {
+    grid-area: thumb;
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+  }
+
+  .topic-text {
+    grid-area: text;
+  }
+
+  .topic-text h3 {
+    font-size: 16px;
+    margin: 0;
+    color: #052143;
+  }
+
+  .topic-text p {
+    font-size: 12px;
+    margin-top: 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* Keep it one line to save space */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Progress & Action Row */
+  .topic-progress {
+    margin-top: 10px;
+    width: 100%;
+  }
+
+  .topic-action {
+    grid-area: action;
+    margin-top: 8px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.5); /* Glass effect on the background */
+    border-radius: 10px;
+    font-size: 13px;
+    text-align: center;
+    border: 1px solid rgba(0,0,0,0.03);
+  }
+}
+@media (max-width: 768px) {
+  
+  /* ALLOW SCROLLING */
+  body.workspace-active {
+    overflow-y: auto !important; 
+    overflow-x: hidden !important;
+    position: relative !important; /* UNLOCKS THE SCREEN */
+    height: auto !important;
+  }
+
+  /* STACK THE LAYOUT */
+  .workspace-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  /* VIDEO AT TOP */
+  .activity-shell {
+    order: 1 !important;
+    width: 100% !important;
+    height: auto !important;
+    flex: none !important;
+  }
+
+  .activity-body {
+    width: 94% !important;
+    margin: 10px auto !important;
+    aspect-ratio: 16 / 9 !important;
+    height: auto !important;
+    border-radius: 12px !important;
+    flex: none !important;
+  }
+
+  /* NAVIGATION ALWAYS OPEN BELOW VIDEO */
+  .topic-activity-nav, 
+  .topic-activity-nav.collapsed {
+    order: 2 !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    display: flex !important; /* Force show */
+    height: auto !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    border: none !important;
+    padding-bottom: 80px !important; /* Space for footer */
+  }
+
+  /* Force Titles to show on Mobile even if "collapsed" class is present */
+  .topic-activity-nav .activity-title {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .topic-activity-nav .activity-item {
+    margin: 4px 12px !important;
+    background: #f8fafc;
+    border-radius: 8px;
+    grid-template-columns: 40px 1fr auto !important; /* Reset grid from dot-mode */
+  }
+
+  .collapse-btn {
+    display: none !important; /* Hide the toggle on mobile */
+  }
+
+  /* FOOTER FIXED TO BOTTOM */
+  .activity-footer {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    z-index: 2000 !important;
+    background: white !important;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.05) !important;
+  }
+
+  .activity-header {
+    position: relative !important;
+    height: 50px !important;
+  }
+}
+
+/* =====================================================
+   5. COMPONENT & UTILITY STYLES (CLEANED)
+===================================================== */
+.activity-icon { font-size: 18px; min-width: 24px; text-align: center; }
+.activity-time { font-size: 12px; margin-left: 10px; opacity: 0.8; }
+
+.next-btn, .complete-btn {
+  background: #00c3d0;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.prev-btn {
+  background: white;
+  border: 1px solid #e5eaf1;
+  padding: 10px 20px;
+  border-radius: 999px;
 }
 

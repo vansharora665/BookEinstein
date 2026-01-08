@@ -150,25 +150,115 @@
 
 /* ---------- MOBILE ---------- */
 
-@media (max-width: 900px) {
+/* ===============================
+   WHY CHOOSE US — MOBILE OVERHAUL
+================================ */
+
+@media (max-width: 768px) {
   .why {
     grid-template-columns: 1fr;
-    gap: 70px;
+    padding: 50px 20px;
+    gap: 40px;
   }
 
-  .why-right {
-    grid-template-columns: 1fr;
+  /* --- LEFT CONTENT --- */
+  .why-left {
+    text-align: left; /* Keep left aligned for better scanability */
   }
 
-  .why-item {
-    transform: none !important;
-    opacity: 1;
+  .why-left h2 {
+    font-size: 27px;
+    line-height: 1.2;
   }
 
+  .why-left h2 span {
+    font-size: 29px;
+    display: inline-block;
+    margin-top: 8px;
+    padding: 4px 14px;
+  }
+
+  .why-desc {
+    font-size: 15px;
+    line-height: 1.6;
+    margin-top: 15px;
+  }
+
+  /* --- JOIN CARD UPGRADE --- */
+  .why-join {
+    margin-top: 30px;
+    padding: 30px 24px;
+    background: #fff9eb; /* Slightly softer cream */
+    border: 1px solid #ffeeba;
+  }
+
+  .why-join-text h3 {
+    font-size: 24px;
+  }
+
+  .join-sub {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* Remove the overlapping image that hides text */
   .join-img {
-    position: relative;
-    height: 200px;
-    margin-top: 18px;
-    right: auto;
+    display: none;
+  }
+
+  .join-meta {
+    display: block;
+    font-size: 12px;
+    background: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    width: fit-content;
+    border: 1px solid #ff9f1c33;
+  }
+
+  /* --- RIGHT GRID (LADDER FIX) --- */
+  .why-right {
+    grid-template-columns: 1fr; /* Single column */
+    padding-top: 20px;
+    gap: 16px; /* Tight, consistent spacing */
+  }
+
+  /* Reset Ladder Animation Logic for Mobile */
+  .why-item {
+    opacity: 0;
+    transform: translateY(20px) !important; /* Soften the jump */
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    max-width: 100%;
+    align-items: center; /* Center icon with text vertically */
+  }
+
+  /* Force reset all ladder classes to prevent desktop overrides */
+  .ladder-1, .ladder-2, .ladder-3, .ladder-4 {
+    transform: translateY(20px) !important;
+  }
+
+  .why-item.ladder-visible {
+    opacity: 1;
+    transform: translateY(0) !important;
+  }
+
+  .why-icon img {
+    width: 24px; /* Slightly smaller icons */
+    height: 24px;
+    padding: 10px;
+  }
+
+  .why-item h4 {
+    font-size: 17px;
+    margin-bottom: 4px;
+  }
+
+  .why-item p {
+    font-size: 14px;
+    line-height: 1.5;
   }
 }

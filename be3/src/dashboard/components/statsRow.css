@@ -80,22 +80,26 @@
   }
 }
 
-/* Mobile */
-@media (max-width: 600px) {
+/* Update these specific parts in statsRow.css */
+.stats-row {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); /* Better scaling */
+  padding: 15px;
+  gap: 12px;
+}
+
+@media (max-width: 480px) {
   .stats-row {
-    grid-template-columns: 1fr;
-    padding: 16px;
+    grid-template-columns: 1fr 1fr; /* 2x2 grid on small phones looks better than 1 long column */
   }
-
+  
   .stat-card {
-    padding: 18px;
-  }
-
-  .stat-card h3 {
-    font-size: 20px;
+    flex-direction: column;
+    text-align: center;
+    padding: 15px 10px;
   }
 
   .stat-card p {
-    font-size: 13px;
+    white-space: normal; /* Allow wrap so it doesn't push the screen out */
+    font-size: 12px;
   }
 }
