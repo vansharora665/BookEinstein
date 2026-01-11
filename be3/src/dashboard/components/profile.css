@@ -1,8 +1,10 @@
 .profile-hub {
-  padding: 28px;
-  max-width: 960px;
+  padding: 24px;
+  width: 100% !important; /* Force to fill container */
+  max-width: 1200px; /* Increased from 960px for desktop */
+  margin: 0 auto;
+  box-sizing: border-box;
 }
-
 /* HEADER */
 .profile-header {
   display: flex;

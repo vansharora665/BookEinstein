@@ -1,269 +1,299 @@
-// src/components/pages/ProfessionalQuiz.jsx
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "./professionalQuiz.css";
 
+/* =====================================
+   DIFFICULTY LADDER
+===================================== */
+const LEVELS = [
+  "very easy",
+  "easy",
+  "medium",
+  "difficult",
+  "very difficult",
+];
+
+const START_LEVEL_INDEX = 2; // medium
+
 export default function ProfessionalQuiz({
-  initialType = "mixed",
-  questions = null,
+  questions = [],
   timePerQuestion = 30,
   sounds = {
-    background:"/sounds/background_loop.mp3",
+    background: "/sounds/background_loop.mp3",
     correct: "/sounds/correct.mp3",
     wrong: "/sounds/wrong.mp3",
-    click: "/sounds/click.mp3",
     applause: "/sounds/applause.mp3",
   },
-  onComplete = null,
+  onComplete,
 }) {
-  /* ---------------- QUESTIONS ---------------- */
-  const sampleQuestions = useMemo(
-    () => [
-      {
-        id: "mc1",
-        type: "mcq",
-        q: "Which language runs in a web browser?",
-        options: ["Python", "C#", "JavaScript", "Java"],
-        answer: 2,
-        correctFeedback: "Correct! JavaScript runs in browsers.",
-        incorrectFeedback: "Incorrect. JavaScript is correct.",
-      },
-    ],
-    []
-  );
+  /* =====================================
+     NORMALIZE QUESTIONS
+  ===================================== */
+  const normalizedQuestions = useMemo(() => {
+  return (questions || []).map((q, idx) => {
+    const optionMap = {
+      A: q.quizOptionA,
+      B: q.quizOptionB,
+      C: q.quizOptionC,
+      D: q.quizOptionD,
+    };
 
-  const bank = questions?.length ? questions : sampleQuestions;
-  const quizList = useMemo(
-    () => (initialType === "mixed" ? bank : bank.filter(q => q.type === initialType)),
-    [bank, initialType]
-  );
+    const options = q.quizQuestion
+      ? Object.values(optionMap).filter(Boolean)
+      : q.options;
 
-  /* ---------------- STATE ---------------- */
-  const [index, setIndex] = useState(0);
-  const [answers, setAnswers] = useState({});
+    const correctIndex = q.quizQuestion
+      ? options.indexOf(optionMap[q.correctAnswer])
+      : q.answer;
+
+    return {
+      id: q.id ?? idx,
+      question: q.quizQuestion ?? q.q,
+      options,
+      correctIndex,
+      difficulty: q.quizDifficulty
+        ?.toString()
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, " "),
+      correctFeedback: q.quizCorrectFeedback ?? "Correct!",
+      incorrectFeedback: q.quizIncorrectFeedback ?? "Incorrect",
+    };
+  });
+}, [questions]);
+
+
+  /* =====================================
+     STATE
+  ===================================== */
+  const [hasStarted, setHasStarted] = useState(false);
+  const [levelIndex, setLevelIndex] = useState(START_LEVEL_INDEX);
+  const [usedIds, setUsedIds] = useState(new Set());
+  const [current, setCurrent] = useState(null);
   const [score, setScore] = useState(0);
-  const [showResult, setShowResult] = useState(false);
   const [timer, setTimer] = useState(timePerQuestion);
-  const [showFeedback, setShowFeedback] = useState(null);
+  const [feedback, setFeedback] = useState(null);
+  const [showResult, setShowResult] = useState(false);
   const [muted, setMuted] = useState(false);
   const [audioUnlocked, setAudioUnlocked] = useState(false);
 
-  /* ---------------- AUDIO (FIXED) ---------------- */
   const audioCorrect = useRef(new Audio(sounds.correct));
   const audioWrong = useRef(new Audio(sounds.wrong));
-  const audioClick = useRef(new Audio(sounds.click));
   const audioApplause = useRef(new Audio(sounds.applause));
   const bgMusic = useRef(new Audio(sounds.background));
 
-
-  // one-time setup
-  useEffect(() => {
-    [audioCorrect, audioWrong, audioClick, audioApplause].forEach(ref => {
-      ref.current.preload = "auto";
-      ref.current.load();
-    });
-  }, []);
-
-  // sync mute
-  useEffect(() => {
-    [audioCorrect, audioWrong, audioClick, audioApplause].forEach(ref => {
-      ref.current.muted = muted;
-    });
-  }, [muted]);
-
-  function play(ref) {
+  const play = (ref) => {
     if (!audioUnlocked || muted) return;
-    try {
-      ref.current.currentTime = 0;
-      ref.current.play().catch(() => {});
-    } catch {}
-  }
-  useEffect(() => {
-  bgMusic.current.loop = true;
-  bgMusic.current.volume = 0.35; // softer than effects
-  bgMusic.current.preload = "auto";
-  bgMusic.current.load();
-}, []);
-useEffect(() => {
-  bgMusic.current.muted = muted;
-}, [muted]);
-useEffect(() => {
-  return () => {
-    try {
-      bgMusic.current.pause();
-      bgMusic.current.currentTime = 0;
-    } catch {}
+    ref.current.currentTime = 0;
+    ref.current.play().catch(() => {});
   };
-}, []);
 
-  /* ---------------- TIMER ---------------- */
+  /* =====================================
+     FIXED QUESTION PICKER
+  ===================================== */
+  const pickNextQuestion = (targetLvlIdx, usedSet) => {
+    // Keep index within array bounds
+    const safeIdx = Math.max(0, Math.min(targetLvlIdx, LEVELS.length - 1));
+    const targetDifficultyName = LEVELS[safeIdx];
+
+    const available = normalizedQuestions.filter(
+      (q) => q.difficulty === targetDifficultyName && !usedSet.has(q.id)
+    );
+
+    if (available.length > 0) {
+      return {
+        question: available[Math.floor(Math.random() * available.length)],
+        levelIndex: safeIdx,
+      };
+    }
+
+    // Fallback: If no question exists at that specific difficulty, pick ANY unused question
+    const fallback = normalizedQuestions.find((q) => !usedSet.has(q.id));
+    if (fallback) {
+      // Find the level index of the fallback question so UI stays in sync
+      const fallbackLvlIdx = LEVELS.indexOf(fallback.difficulty);
+      return {
+        question: fallback,
+        levelIndex: fallbackLvlIdx !== -1 ? fallbackLvlIdx : safeIdx,
+      };
+    }
+
+    return null; // No questions left at all
+  };
+
+  /* =====================================
+     HANDLERS
+  ===================================== */
+  function startQuiz() {
+    if (normalizedQuestions.length === 0) return;
+    
+    setHasStarted(true);
+    setAudioUnlocked(true);
+
+    if (!muted) {
+      bgMusic.current.loop = true;
+      bgMusic.current.volume = 0.35;
+      bgMusic.current.play().catch(() => {});
+    }
+
+    const first = pickNextQuestion(START_LEVEL_INDEX, new Set());
+    if (first) {
+      setCurrent(first.question);
+      setLevelIndex(first.levelIndex);
+    } else {
+      setShowResult(true);
+    }
+  }
+
+  function handleAnswer(selectedIndex, timedOut = false) {
+    const isCorrect = !timedOut && selectedIndex === current.correctIndex;
+
+    if (isCorrect) {
+      setScore((s) => s + 1);
+      play(audioCorrect);
+    } else {
+      play(audioWrong);
+    }
+
+    setFeedback({
+      type: isCorrect ? "correct" : "incorrect",
+      text: isCorrect
+        ? current.correctFeedback
+        : timedOut
+        ? "⏱ Time’s up!"
+        : current.incorrectFeedback,
+    });
+
+    const newUsed = new Set(usedIds);
+    newUsed.add(current.id);
+    setUsedIds(newUsed);
+
+    setTimeout(() => {
+      setFeedback(null);
+      
+      // If correct, increase difficulty (+1). If wrong, decrease (-1).
+      const nextLvl = isCorrect ? levelIndex + 1 : levelIndex - 1;
+      const next = pickNextQuestion(nextLvl, newUsed);
+
+      if (!next || newUsed.size >= 10) { // Limits to 10 questions total
+        finishQuiz();
+      } else {
+        setLevelIndex(next.levelIndex);
+        setCurrent(next.question);
+      }
+    }, 1800);
+  }
+
+  function finishQuiz() {
+    bgMusic.current.pause();
+    play(audioApplause);
+    setShowResult(true);
+    onComplete?.({ score, total: usedIds.size });
+  }
+
+  /* =====================================
+     TIMER EFFECT
+  ===================================== */
   useEffect(() => {
-    if (!timePerQuestion || showResult) return;
+    if (!hasStarted || !current || showResult || feedback) return;
     setTimer(timePerQuestion);
-
     const t = setInterval(() => {
-      setTimer(s => {
+      setTimer((s) => {
         if (s <= 1) {
           clearInterval(t);
           handleAnswer(null, true);
-          return timePerQuestion;
+          return 0;
         }
         return s - 1;
       });
     }, 1000);
-
     return () => clearInterval(t);
-  }, [index, showResult, timePerQuestion]);
+  }, [current, hasStarted, showResult, feedback]);
 
-  /* ---------------- ANSWER ---------------- */
-  function handleAnswer(given, timedOut = false) {
-    if (!audioUnlocked) {
-  setAudioUnlocked(true);
-  if (!muted) {
-    try {
-      bgMusic.current.currentTime = 0;
-      bgMusic.current.play().catch(() => {});
-    } catch {}
-  }
-}
-
-
-    const correct = current.type === "mcq" ? given === current.answer : false;
-
-    setAnswers(s => ({ ...s, [current.id]: { given, correct, timedOut } }));
-
-    if (correct) {
-      setScore(s => s + 1);
-      play(audioCorrect);
-      setShowFeedback({ type: "correct", text: current.correctFeedback });
-    } else {
-      play(audioWrong);
-      setShowFeedback({ type: "incorrect", text: current.incorrectFeedback });
-    }
-
-    setTimeout(() => {
-      setShowFeedback(null);
-      index + 1 < quizList.length ? setIndex(i => i + 1) : finishQuiz();
-    }, 1200);
-  }
-
-  /* ---------------- FINISH ---------------- */
-  function finishQuiz() {
-  try {
-    bgMusic.current.pause();
-    bgMusic.current.currentTime = 0;
-  } catch {}
-
-  play(audioApplause);
-
-  setShowResult(true);
-  onComplete?.({ score, total: quizList.length, details: answers });
-}
-
-
-  /* ---------------- UI ---------------- */
-  const current = quizList[index];
-  const progress = Math.round((index / quizList.length) * 100);
-
+  /* =====================================
+     RENDER
+  ===================================== */
   return (
     <div className="quiz-container-adaptive">
-  <div className="quiz-desktop">
-    <div className="quiz-root">
-      
-
-      <div className="quiz-card">
-        {!showResult ? (
-          <>
-            <div className="quiz-header">
-              <span>Question {index + 1}/{quizList.length}</span>
-              <div className="quiz-header-right">
-                <span className="quiz-score">Score: {score}</span>
-                <button className="quiz-mute-btn" onClick={() => setMuted(m => !m)}>
-                  {muted ? "🔇" : "🔊"}
+      <div className="quiz-desktop">
+        <div className="quiz-root">
+          <div className="quiz-card">
+            {!hasStarted ? (
+              <div className="quiz-result">
+                <h1 style={{ fontSize: "50px" }}>🚀</h1>
+                <h2>Professional Quiz</h2>
+                <p>Starting Difficulty: <strong>Medium</strong></p>
+                <button className="quiz-finish-btn" onClick={startQuiz}>
+                  Start Quiz
                 </button>
               </div>
-            </div>
+            ) : !showResult ? (
+              <>
+                <div className="quiz-header">
+                  <span>Difficulty: <strong>{LEVELS[levelIndex].toUpperCase()}</strong></span>
+                  <div className="quiz-header-right">
+                    <span className="quiz-score">Score: {score}</span>
+                    <button className="quiz-mute-btn" onClick={() => setMuted((m) => !m)}>
+                      {muted ? "🔇" : "🔊"}
+                    </button>
+                  </div>
+                </div>
 
-            <div className="quiz-progress">
-              <motion.div 
-                initial={{ width: 0 }}
-                animate={{ width: `${progress}%` }} 
-              />
-            </div>
+                <div className="quiz-progress">
+                  <motion.div animate={{ width: `${(usedIds.size / 10) * 100}%` }} />
+                </div>
 
-            {current && (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-              >
-                <h2 className="quiz-question">{current.q}</h2>
-                <div className="quiz-options">
-                  {current.options.map((opt, i) => {
-                    const ans = answers[current.id];
-                    const isCorrect = ans && i === current.answer;
-                    const isWrong = ans && ans.given === i && !ans.correct;
+                {current && (
+                  <motion.div key={current.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                    <h2 className="quiz-question">{current.question}</h2>
+                    <div className="quiz-options">
+                      {current.options.map((opt, i) => (
+                        <button
+                          key={i}
+                          disabled={!!feedback}
+                          onClick={() => handleAnswer(i)}
+                          className={`quiz-option ${feedback && i === current.correctIndex ? 'correct' : ''}`}
+                        >
+                          {opt}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
 
-                    return (
-                      <button
-                        key={i}
-                        disabled={ans}
-                        onClick={() => handleAnswer(i)}
-                        className={`quiz-option ${isCorrect ? "correct" : isWrong ? "incorrect" : ""}`}
+                <div className="quiz-feedback-container">
+                  <AnimatePresence>
+                    {feedback && (
+                      <motion.div
+                        className={`quiz-feedback ${feedback.type}`}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
                       >
-                        {opt}
-                      </button>
-                    );
-                  })}
+                        {feedback.text}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-              </motion.div>
-            )}
-            <div className="quiz-feedback-container">
-    <AnimatePresence>
-      {showFeedback && (
-        <motion.div
-          className={`quiz-feedback ${showFeedback.type}`}
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0 }}
-        >
-          {showFeedback.text}
-        </motion.div>
-      )}
-    </AnimatePresence>
-  </div>
 
-            <div className="quiz-footer">
-              <span className="quiz-timer">⏱ {timer}s</span>
-              {index === quizList.length - 1 && answers[current.id] && (
-                <div className="quiz-finish-wrapper">
-                  <button className="quiz-finish-btn" onClick={finishQuiz}>
-                    See Results
-                  </button>
+                <div className="quiz-footer">
+                  <span className="quiz-timer">⏱ {timer}s</span>
+                  <span>Question {usedIds.size + 1} / 10</span>
                 </div>
-              )}
-            </div>
-          </>
-        ) : (
-          /* RESULT VIEW INSIDE CARD */
-          <motion.div 
-            className="quiz-result"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-          >
-            <h1 style={{ fontSize: '48px' }}>🎉</h1>
-            <h2>Quiz Completed!</h2>
-            <div className="quiz-score-display" style={{ fontSize: '24px', margin: '20px 0', color: '#00c3d0', fontWeight: '800' }}>
-              Final Score: {score} / {quizList.length}
-            </div>
-            <button className="quiz-finish-btn" onClick={() => window.location.reload()}>
-              Try Again
-            </button>
-          </motion.div>
-        )}
+              </>
+            ) : (
+              <div className="quiz-result">
+                <h1 style={{ fontSize: "60px" }}>🎯</h1>
+                <h2>Results</h2>
+                <div className="quiz-score-display">{score} / {usedIds.size}</div>
+                <button className="quiz-finish-btn" onClick={() => window.location.reload()}>
+                  Restart
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  </div>
-);
+  );
 }

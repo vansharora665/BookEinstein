@@ -1,87 +1,58 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./aiOrNot.css";
 import { quizQuestions, difficultyLevels } from "./AiOrNotquestions";
 
-const aiOptions = ["learn", "Think", "Decide", "Recogonize"];
+const aiOptions = ["Learn", "Think", "Decide", "Recognize"];
 
 export default function AIImageQuiz() {
+  /* ===============================
+     HELPERS
+  =============================== */
 
+  const normalizeImageUrl = (url) =>
+    url ? url.replace("hhttps://", "https://") : "";
 
-  function normalizeDriveImage(url) {
-  if (!url) return "";
+  const normalizeAiType = (aiType) =>
+    Array.isArray(aiType) ? aiType : aiType ? [aiType] : [];
 
-  // fix typo
-  url = url.replace("hhttps://", "https://");
-
-  // already correct
-  if (url.includes("uc?export=view&id=")) return url;
-
-  // extract ID from /file/d/
-  const match = url.match(/\/d\/([^/]+)/);
-  if (match && match[1]) {
-    return `https://drive.google.com/uc?export=view&id=${match[1]}`;
-  }
-
-  return url;
-}
+  const isExactMatch = (selected, correct) => {
+    if (selected.length !== correct.length) return false;
+    return correct.every(c => selected.includes(c));
+  };
 
   /* ===============================
      STATE
   =============================== */
+
   const [studentLevel, setStudentLevel] = useState(
     difficultyLevels.indexOf("medium")
   );
   const [usedQuestions, setUsedQuestions] = useState(new Set());
   const [currentQuestion, setCurrentQuestion] = useState(null);
+
+  const [activeDifficulty, setActiveDifficulty] = useState(null);
+
   const [showAIDetails, setShowAIDetails] = useState(false);
+  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [submitted, setSubmitted] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(null);
+
   const [feedback, setFeedback] = useState("");
-  const [imageSrc, setImageSrc] = useState(null);
+  const [imageError, setImageError] = useState(false);
 
   /* ===============================
-     INITIAL QUESTION
+     INIT
   =============================== */
+
   useEffect(() => {
     pickNextQuestion(studentLevel, usedQuestions);
     // eslint-disable-next-line
   }, []);
 
   /* ===============================
-     GOOGLE DRIVE IMAGE FIX (BLOB)
-  =============================== */
-  useEffect(() => {
-    let active = true;
-
-    async function loadImage() {
-      try {
-        const res = await fetch(currentQuestion.image);
-        const blob = await res.blob();
-
-        // Drive sometimes returns HTML
-        if (!blob.type.startsWith("image")) {
-          throw new Error("Not an image");
-        }
-
-        const objectUrl = URL.createObjectURL(blob);
-        if (active) setImageSrc(objectUrl);
-      } catch (err) {
-        console.error("Image load failed:", err);
-        if (active) setImageSrc(null);
-      }
-    }
-
-    if (currentQuestion?.image) {
-      loadImage();
-    }
-
-    return () => {
-      active = false;
-      if (imageSrc) URL.revokeObjectURL(imageSrc);
-    };
-  }, [currentQuestion]);
-
-  /* ===============================
      ADAPTIVE LOGIC
   =============================== */
+
   const getNextStudentLevel = (current, correct) => {
     if (correct && current === difficultyLevels.length - 1) return current;
     if (!correct && current === 0) return current;
@@ -97,13 +68,20 @@ export default function AIImageQuiz() {
       );
       if (q) {
         setCurrentQuestion(q);
+        setActiveDifficulty(difficultyLevels[i]);
+        setShowAIDetails(false);
+        setSelectedOptions([]);
+        setSubmitted(false);
+        setIsCorrect(null);
+        setFeedback("");
+        setImageError(false);
         return;
       }
     }
     setCurrentQuestion(null);
   };
 
-  const goNext = correct => {
+  const goNext = (correct) => {
     const nextLevel = getNextStudentLevel(studentLevel, correct);
     const newUsed = new Set(usedQuestions);
     newUsed.add(currentQuestion.id);
@@ -111,36 +89,58 @@ export default function AIImageQuiz() {
     setTimeout(() => {
       setStudentLevel(nextLevel);
       setUsedQuestions(newUsed);
-      setShowAIDetails(false);
-      setFeedback("");
       pickNextQuestion(nextLevel, newUsed);
-    }, 700);
+    }, 1200);
   };
 
   /* ===============================
      HANDLERS
   =============================== */
-  const handleAISelection = answer => {
-    const correct = answer === currentQuestion.isAI;
+
+  const handleAISelection = (answer) => {
+    const isAIQuestion =
+      currentQuestion?.isAI ?? currentQuestion?.isAi;
+
+    const correct = answer === isAIQuestion;
 
     if (correct && answer === true) {
-      setFeedback("Correct! Identify the AI technique.");
       setShowAIDetails(true);
+      setFeedback("Select all applicable AI abilities");
     } else {
       setFeedback(correct ? "Correct!" : "Incorrect!");
       goNext(correct);
     }
   };
 
-  const handleAITypeSelection = type => {
-    const correct = type === currentQuestion.aiType;
-    setFeedback(correct ? "Correct AI technique!" : "Wrong technique!");
+  const toggleOption = (opt) => {
+    if (submitted) return;
+
+    setSelectedOptions(prev =>
+      prev.includes(opt)
+        ? prev.filter(o => o !== opt)
+        : [...prev, opt]
+    );
+  };
+
+  const handleSubmit = () => {
+    const correctTypes = normalizeAiType(currentQuestion.aiType);
+    const correct = isExactMatch(selectedOptions, correctTypes);
+
+    setSubmitted(true);
+    setIsCorrect(correct);
+    setFeedback(
+      correct
+        ? "✅ Correct!"
+        : "❌ Incorrect — correct answers highlighted"
+    );
+
     goNext(correct);
   };
 
   /* ===============================
      END STATE
   =============================== */
+
   if (!currentQuestion) {
     return (
       <div className="quiz-end">
@@ -156,50 +156,102 @@ export default function AIImageQuiz() {
   /* ===============================
      RENDER
   =============================== */
+
+  const imageUrl = normalizeImageUrl(currentQuestion.image);
+  const correctAnswers = normalizeAiType(currentQuestion.aiType);
+
   return (
     <div className="quiz-container">
       <div className="quiz-header">
-        <h3>
-          Difficulty:{" "}
-          <span>{difficultyLevels[studentLevel]}</span>
-        </h3>
+        <h3>AI Identification Quiz</h3>
+        <div className="difficulty-badge">
+          {activeDifficulty?.toUpperCase()}
+        </div>
       </div>
 
-      {imageSrc ? (
-        <img
-          src={normalizeDriveImage(imageSrc)}
-          alt="AI Quiz"
-          className="quiz-image"
-        />
-      ) : (
-        <div className="image-loading">
-          Loading image...
-        </div>
-      )}
+      <div className="image-wrapper">
+        {!imageError ? (
+          <img
+            src={imageUrl}
+            alt="Quiz"
+            className="quiz-image"
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          <div className="image-fallback">⚠️ Image unavailable</div>
+        )}
+      </div>
 
-      {!showAIDetails ? (
-        <div className="options">
-          <button onClick={() => handleAISelection(true)}>
-            AI Generated
-          </button>
-          <button onClick={() => handleAISelection(false)}>
-            Not AI
-          </button>
-        </div>
-      ) : (
-        <div className="options">
-          {aiOptions.map(opt => (
+      <div className="options-container">
+        {!showAIDetails ? (
+          <div className="options-grid">
             <button
-              key={opt}
-              onClick={() => handleAITypeSelection(opt)}
+              className="quiz-btn primary"
+              onClick={() => handleAISelection(true)}
             >
-              {opt}
+              🤖 AI Generated
             </button>
-          ))}
+            <button
+              className="quiz-btn"
+              onClick={() => handleAISelection(false)}
+            >
+              📸 Real Photo
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="options-grid">
+              {aiOptions.map(opt => {
+                const isSelected = selectedOptions.includes(opt);
+                const isCorrectAnswer =
+                  submitted && correctAnswers.includes(opt);
+
+                return (
+                  <button
+                    key={opt}
+                    className={`quiz-btn
+                      ${isSelected ? "selected" : ""}
+                      ${isCorrectAnswer ? "correct-answer" : ""}
+                      ${
+                        submitted &&
+                        isSelected &&
+                        !isCorrectAnswer
+                          ? "wrong-answer"
+                          : ""
+                      }
+                    `}
+                    onClick={() => toggleOption(opt)}
+                  >
+                    {opt}
+                  </button>
+                );
+              })}
+            </div>
+
+            <button
+              className="quiz-btn submit"
+              disabled={selectedOptions.length === 0 || submitted}
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
+          </>
+        )}
+      </div>
+
+      {feedback && (
+        <div
+          className={`feedback-overlay ${
+            isCorrect === true
+              ? "correct"
+              : isCorrect === false
+              ? "incorrect"
+              : ""
+          }`}
+        >
+          {feedback}
         </div>
       )}
-
-      {feedback && <p className="feedback">{feedback}</p>}
     </div>
   );
 }
